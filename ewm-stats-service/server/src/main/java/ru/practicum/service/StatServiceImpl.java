@@ -34,7 +34,8 @@ public class StatServiceImpl implements StatService {
     public List<ViewStats> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
         Sort sort = Sort.by(Sort.Direction.DESC, "hits");
         if (start.isAfter(end)) {
-            throw new ValidateDateException("Дата окончания должна быть больше или равна дате начала");
+            throw new ValidateDateException("Дата окончания должна быть больше или равна дате начала. " +
+                    "Введённые даты: начало - " + start + ", окончание - " + end);
         }
         if (uris.isEmpty()) {
             if (unique) {
