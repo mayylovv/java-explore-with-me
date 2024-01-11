@@ -22,6 +22,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "JOIN FETCH e.category " +
             "where e.initiator.id = :userId")
     List<Event> findAllWithInitiatorByInitiatorId(Long userId, PaginationSetup paginationSetup);
+
     Optional<Event> findByIdAndInitiatorId(Long eventId, Long initiatorId);
 
     @Query("select e " +
@@ -64,5 +65,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "and (:states is null or e.state in :states)")
     List<Event> findAllForAdmin(List<Long> users, List<EventStatus> states, List<Long> categories, LocalDateTime rangeStart,
                                 PageRequest pageable);
+
     List<Event> findAllByIdIn(Set<Long> events);
 }

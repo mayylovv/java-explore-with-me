@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RequestStatusСonfirmation {
+public class RequestStatusConfirm {
 
     List<RequestDto> confirmedRequests;
     List<RequestDto> rejectedRequests;

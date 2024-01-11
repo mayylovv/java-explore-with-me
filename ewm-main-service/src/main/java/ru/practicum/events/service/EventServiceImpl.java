@@ -193,6 +193,7 @@ public class EventServiceImpl implements EventService {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с  id = " + userId + " не найден"));
     }
+
     private Category getCategoryById(Long id) {
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Категория с id = " + id + " не найдена"));

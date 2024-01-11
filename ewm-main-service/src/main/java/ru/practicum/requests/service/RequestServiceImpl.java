@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.requests.dto.RequestStatusParticipation;
-import ru.practicum.requests.dto.RequestStatusСonfirmation;
+import ru.practicum.requests.dto.RequestStatusConfirm;
 import ru.practicum.events.model.Event;
 import ru.practicum.events.repository.EventRepository;
 import ru.practicum.exception.ValidateException;
@@ -99,8 +99,8 @@ public class RequestServiceImpl implements RequestService {
 
     @Transactional
     @Override
-    public RequestStatusСonfirmation updateEventRequestStatus(Long userId, Long eventId,
-                                                              RequestStatusParticipation dtoRequest) {
+    public RequestStatusConfirm updateEventRequestStatus(Long userId, Long eventId,
+                                                         RequestStatusParticipation dtoRequest) {
         Event event = eventRepository.findByIdAndInitiatorId(eventId, userId)
                 .orElseThrow(() -> new NotFoundException("Событие с id = " + eventId + " не найдено."));
 
@@ -136,17 +136,17 @@ public class RequestServiceImpl implements RequestService {
         return mapToParticipationRequestDto(requestRepository.save(request));
     }
 
-    private RequestStatusСonfirmation saveRejectedStatus(List<Request> requests, Event event) {
+    private RequestStatusConfirm saveRejectedStatus(List<Request> requests, Event event) {
         requests.forEach(request -> request.setStatus(REJECTED));
         requestRepository.saveAll(requests);
         List<RequestDto> rejectedRequests = requests
                 .stream()
                 .map(RequestMapper::mapToParticipationRequestDto)
                 .collect(Collectors.toList());
-        return new RequestStatusСonfirmation(List.of(), rejectedRequests);
+        return new RequestStatusConfirm(List.of(), rejectedRequests);
     }
 
-    private RequestStatusСonfirmation saveConfirmedStatus(List<Request> requests, Event event) {
+    private RequestStatusConfirm saveConfirmedStatus(List<Request> requests, Event event) {
         if (event.getParticipantLimit() > 0 && event.getConfirmedRequests().equals(event.getParticipantLimit())) {
             throw new ValidateException("Исчерпан лимит заявок на участие в мероприятии.");
         }
@@ -157,7 +157,7 @@ public class RequestServiceImpl implements RequestService {
             requestRepository.saveAll(requests);
             event.setConfirmedRequests(event.getConfirmedRequests() + requests.size());
             eventRepository.save(event);
-            return new RequestStatusСonfirmation(requests
+            return new RequestStatusConfirm(requests
                     .stream()
                     .map(RequestMapper::mapToParticipationRequestDto)
                     .collect(Collectors.toList()), List.of());
@@ -177,7 +177,7 @@ public class RequestServiceImpl implements RequestService {
         requestRepository.saveAll(Stream.of(confirmedRequests, rejectedRequests)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList()));
-        return new RequestStatusСonfirmation(confirmedRequests
+        return new RequestStatusConfirm(confirmedRequests
                 .stream()
                 .map(RequestMapper::mapToParticipationRequestDto)
                 .collect(Collectors.toList()),

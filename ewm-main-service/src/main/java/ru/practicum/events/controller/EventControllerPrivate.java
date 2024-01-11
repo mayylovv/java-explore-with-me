@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.events.dto.*;
 import ru.practicum.events.service.EventService;
 import ru.practicum.requests.dto.RequestStatusParticipation;
-import ru.practicum.requests.dto.RequestStatusСonfirmation;
+import ru.practicum.requests.dto.RequestStatusConfirm;
 import ru.practicum.requests.dto.RequestDto;
 import ru.practicum.requests.service.RequestService;
 
@@ -72,9 +72,9 @@ public class EventControllerPrivate {
 
     @PatchMapping("/{eventId}/requests")
     @ResponseStatus(value = HttpStatus.OK)
-    public RequestStatusСonfirmation updateEventRequestStatus(@PathVariable(value = "userId") Long userId,
-                                                              @PathVariable(value = "eventId") Long eventId,
-                                                              @RequestBody RequestStatusParticipation updateRequest) {
+    public RequestStatusConfirm updateEventRequestStatus(@PathVariable(value = "userId") Long userId,
+                                                         @PathVariable(value = "eventId") Long eventId,
+                                                         @RequestBody RequestStatusParticipation updateRequest) {
         log.info("Обновление статуса запроса: userId = {}, eventId = {}", userId, eventId);
         return requestService.updateEventRequestStatus(userId,eventId, updateRequest);
     }
