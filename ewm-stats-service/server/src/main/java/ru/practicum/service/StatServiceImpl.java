@@ -21,12 +21,12 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class StatServiceImpl implements StatService {
 
-    private final StatRepository repository;
+    private final StatRepository statrepository;
 
     @Override
     @Transactional
     public void saveStat(HitRequestDto dto) {
-        StatSvc stat = repository.save(StatMapper.mapToStat(dto));
+        StatSvc stat = statrepository.save(StatMapper.mapToStat(dto));
         log.info("Сохранить статистику {}", stat);
     }
 
@@ -39,13 +39,13 @@ public class StatServiceImpl implements StatService {
         }
         if (uris.isEmpty()) {
             if (unique) {
-                return repository.getStatsWithUniqueIp(start, end, sort);
+                return statrepository.getStatsWithUniqueIp(start, end, sort);
             }
-            return repository.getStats(start, end, sort);
+            return statrepository.getStats(start, end, sort);
         }
         if (unique) {
-            return repository.getStatsByUrisListWithUniqueIp(start, end, uris, sort);
+            return statrepository.getStatsByUrisListWithUniqueIp(start, end, uris, sort);
         }
-        return repository.getStatsByUrisList(start, end, uris, sort);
+        return statrepository.getStatsByUrisList(start, end, uris, sort);
     }
 }
