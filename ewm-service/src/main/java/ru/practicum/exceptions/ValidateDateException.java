@@ -1,4 +1,4 @@
-package ru.practicum.handler;
+package ru.practicum.exceptions;
 
 public class ValidateDateException extends RuntimeException {
 

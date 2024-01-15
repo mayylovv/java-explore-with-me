@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.handler.NotFoundException;
+import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.users.dto.NewUserDto;
 import ru.practicum.users.dto.UserDto;
 import ru.practicum.users.mapper.UserMapper;

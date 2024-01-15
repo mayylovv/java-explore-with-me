@@ -9,8 +9,8 @@ import ru.practicum.categories.dto.CategoryDto;
 import ru.practicum.categories.mapper.CategoryMapper;
 import ru.practicum.categories.model.Category;
 import ru.practicum.categories.repository.CategoryRepository;
-import ru.practicum.handler.NotFoundException;
-import ru.practicum.handler.ValidateException;
+import ru.practicum.exceptions.NotFoundException;
+import ru.practicum.exceptions.ValidateException;
 import ru.practicum.util.PaginationSetup;
 
 import java.util.List;

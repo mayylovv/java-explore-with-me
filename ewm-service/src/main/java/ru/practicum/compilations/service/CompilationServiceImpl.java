@@ -13,7 +13,7 @@ import ru.practicum.compilations.model.Compilation;
 import ru.practicum.compilations.repository.CompilationRepository;
 import ru.practicum.events.model.Event;
 import ru.practicum.events.repository.EventRepository;
-import ru.practicum.handler.NotFoundException;
+import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.util.PaginationSetup;
 
 import java.util.List;
