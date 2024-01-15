@@ -7,9 +7,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.events.dto.*;
 import ru.practicum.events.service.EventService;
-import ru.practicum.requests.dto.EventRequestStatusUpdateRequest;
-import ru.practicum.requests.dto.EventRequestStatusUpdateResult;
-import ru.practicum.requests.dto.ParticipationRequestDto;
+import ru.practicum.requests.dto.RequestStatusParticipation;
+import ru.practicum.requests.dto.RequestStatusConfirm;
+import ru.practicum.requests.dto.RequestDto;
 import ru.practicum.requests.service.RequestService;
 
 import javax.validation.Valid;
@@ -64,7 +64,7 @@ public class PrivateEventController {
     // Получение информации о запросах на участие в событии текущего пользователя.
     @GetMapping("/{eventId}/requests")
     @ResponseStatus(value = HttpStatus.OK)
-    public Collection<ParticipationRequestDto> getParticipationRequestByIdEvent(
+    public Collection<RequestDto> getParticipationRequestByIdEvent(
             @PathVariable(value = "userId") Long userId,
             @PathVariable(value = "eventId") Long eventId) {
         log.info("Get participation request by user Id {} and event Id {}", userId, eventId);
@@ -74,10 +74,10 @@ public class PrivateEventController {
     // Изменение статуса (подтверждена, отменена) заявок на участие в событии текущего пользователя.
     @PatchMapping("/{eventId}/requests")
     @ResponseStatus(value = HttpStatus.OK)
-    public EventRequestStatusUpdateResult updateEventRequestStatus(
+    public RequestStatusConfirm updateEventRequestStatus(
             @PathVariable(value = "userId") Long userId,
             @PathVariable(value = "eventId") Long eventId,
-            @RequestBody EventRequestStatusUpdateRequest updateRequest) {
+            @RequestBody RequestStatusParticipation updateRequest) {
         log.info("Updating status participation request by user Id {} and event Id {}", userId, eventId);
         return requestService.updateEventRequestStatus(userId,eventId, updateRequest);
     }
