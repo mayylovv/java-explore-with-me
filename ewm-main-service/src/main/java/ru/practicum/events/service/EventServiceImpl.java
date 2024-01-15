@@ -179,6 +179,7 @@ public class EventServiceImpl implements EventService {
             fullDto.setViews(views.size());
         }
 
+
         statsClient.saveStats(APP, request.getRequestURI(), request.getRemoteAddr(), LocalDateTime.now());
         return fullDto;
     }
