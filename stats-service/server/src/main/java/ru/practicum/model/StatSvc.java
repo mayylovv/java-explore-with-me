@@ -1,37 +1,36 @@
 package ru.practicum.model;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Table(name = "stat")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class StatSvc {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(
-            name = "id",
-            updatable = false
-    )
-    private int id; // Идентификатор записи;
+    @Column(name = "id", updatable = false)
+    int id;
 
     @Column(name = "app", nullable = false)
-    private String app; // Идентификатор сервиса для которого записывается информация, example: ewm-main-StatService.StatService;
+    String app;
 
     @Column(name = "uri", nullable = false)
-    private String uri; // URI для которого был осуществлен запрос, example: /events/1;
+    String uri;
 
     @Column(name = "ip")
-    private String ip; // IP-адрес пользователя, осуществившего запрос, example: 192.163.0.1;
+    String ip;
 
     @Column(name = "timestamp", nullable = false)
-    private LocalDateTime timestamp; // Дата и время, когда был совершен запрос к эндпоинту
-    // (в формате "yyyy-MM-dd HH:mm:ss"), example: 2022-09-06 11:00:23.
+    LocalDateTime timestamp;
 }
