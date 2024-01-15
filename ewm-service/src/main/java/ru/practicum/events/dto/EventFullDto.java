@@ -3,35 +3,36 @@ package ru.practicum.events.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.*;
-import ru.practicum.events.EventState;
+import lombok.experimental.FieldDefaults;
+import ru.practicum.events.enums.EventState;
 import ru.practicum.events.model.Location;
 
 import java.time.LocalDateTime;
 
 import static ru.practicum.util.Constants.PATTERN_DATE;
 
-@Setter
-@Getter
-@ToString
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventFullDto {
 
-    private Long id; // Идентификатор;
-    private String title; // Заголовок;
-    private String annotation; // Краткое описание;
+    Long id;
+    String title;
+    String annotation;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = PATTERN_DATE)
-    private LocalDateTime eventDate; // Дата и время на которые намечено событие (в формате "yyyy-MM-dd HH:mm:ss");
-    private Location location; // Широта и долгота места проведения события;
-    private boolean paid; // Нужно ли оплачивать участие;
-    private int participantLimit; // Ограничение на количество участников;
-    private int confirmedRequests; // Количество одобренных заявок на участие в данном событии;
-    private long views; // Количество просмотров события.
-    private EventState state; // Список состояний жизненного цикла события;
+    LocalDateTime eventDate;
+
+    Location location;
+    boolean paid;
+    int participantLimit;
+    int confirmedRequests;
+    long views;
+    EventState state;
 
     @JsonUnwrapped
-    AdditionalEventInformation eventInformation;
+    AdditionalInformation eventInformation;
 
 
 }

@@ -1,89 +1,80 @@
 package ru.practicum.events.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.practicum.categories.model.Category;
-import ru.practicum.events.EventState;
+import ru.practicum.events.enums.EventState;
 import ru.practicum.users.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 import static ru.practicum.util.Constants.PATTERN_DATE;
-import static ru.practicum.events.EventState.PENDING;
+import static ru.practicum.events.enums.EventState.PENDING;
 
+@Data
 @Entity
-@Table(name = "events")
-@ToString
-@Getter
-@Setter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @DynamicUpdate
+@Table(name = "events")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(
-            name = "id",
-            updatable = false
-    )
-    private Long id;  // Идентификатор;
+    @Column(name = "id", updatable = false)
+    Long id;
 
     @Column(name = "annotation", nullable = false, length = 2000)
-    private String annotation; // Краткое описание;
+    String annotation;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
-    private Category category; // категория к которой относится событие;
+    Category category;
 
     @Column(name = "description", nullable = false, length = 7000)
-    private String description; // Полное описание события;
+    String description;
 
     @Column(name = "event_date", nullable = false)
     @DateTimeFormat(pattern = PATTERN_DATE)
-    private LocalDateTime eventDate; // Дата и время на которые намечено событие;
+    LocalDateTime eventDate;
 
     @Column(name = "location_lat", nullable = false)
-    private float lat; // Широта;
+    float lat;
 
     @Column(name = "location_lon", nullable = false)
-    private float lon; // Долгота;
+    float lon;
 
     @Column(name = "paid", nullable = false)
-    private Boolean paid; // Нужно ли оплачивать участие в событии. Default: false;
+    Boolean paid;
 
     @Column(name = "participant_limit", nullable = false)
-    // Ограничение на количество участников. Значение 0 - означает отсутствие ограничения. Default: 0;
-    private Integer participantLimit;
+    Integer participantLimit;
 
     @Column(name = "confirmed_requests")
-    private Integer confirmedRequests = 0; // Количество одобренных заявок на участие в данном событии;
+    Integer confirmedRequests = 0;
 
-    /* Нужна ли пре-модерация заявок на участие. Если true, то все заявки будут ожидать подтверждения инициатором события.
-       Если false - то будут подтверждаться автоматически. Default: true*/
     @Column(name = "request_moderation", nullable = false)
-    private Boolean requestModeration;
+    Boolean requestModeration;
 
     @Column(name = "title", nullable = false, length = 120)
-    private String title; // Заголовок события;
+    String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "initiator_id", nullable = false)
-    private User initiator;
+    User initiator;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = false)
-    private EventState state = PENDING; // Состояние жизненного цикла события
+    EventState state = PENDING;
 
     @Column(name = "created_on", nullable = false)
     @DateTimeFormat(pattern = PATTERN_DATE)
-    private LocalDateTime createdOn = LocalDateTime.now(); // Дата и время создания события
+    LocalDateTime createdOn = LocalDateTime.now();
 
     @Column(name = "published_on")
     @DateTimeFormat(pattern = PATTERN_DATE)
-    private LocalDateTime publishedOn; // Дата и время публикации события
+    LocalDateTime publishedOn;
 }

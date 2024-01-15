@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static ru.practicum.events.EventState.PUBLISHED;
+import static ru.practicum.events.enums.EventState.PUBLISHED;
 import static ru.practicum.requests.EventRequestStatus.*;
 import static ru.practicum.requests.mapper.RequestMapper.mapToNewParticipationRequest;
 import static ru.practicum.requests.mapper.RequestMapper.mapToParticipationRequestDto;

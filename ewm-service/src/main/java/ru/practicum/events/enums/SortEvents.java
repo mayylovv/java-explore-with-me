@@ -1,11 +1,10 @@
-package ru.practicum.events;
+package ru.practicum.events.enums;
 
 import java.util.Optional;
 
 public enum SortEvents {
-    // Сортировка по дате
+
     EVENT_DATE,
-    // Сортировка по количеству просмотров
     VIEWS;
 
     public static Optional<SortEvents> from(String stringState) {
