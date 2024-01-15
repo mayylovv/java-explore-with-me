@@ -2,8 +2,6 @@ package ru.practicum.users.dto;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
-import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.Email;
