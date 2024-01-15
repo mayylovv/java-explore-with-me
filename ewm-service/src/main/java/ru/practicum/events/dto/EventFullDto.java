@@ -35,22 +35,5 @@ public class EventFullDto {
     @JsonUnwrapped
     AdditionalEventInformation eventInformation;
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @ToString
-    protected static class AdditionalEventInformation {
 
-        private String description; // Полное описание события;
-        private CategoryDto category; // Категория;
-        private boolean requestModeration; // Нужна ли пре-модерация заявок на участие, default: true;
-        private UserShortDto initiator; // Инициатор;
-
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = PATTERN_DATE)
-        private LocalDateTime publishedOn; // Дата и время публикации события (в формате "yyyy-MM-dd HH:mm:ss");
-
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = PATTERN_DATE)
-        private LocalDateTime createdOn; // Дата и время создания события (в формате "yyyy-MM-dd HH:mm:ss")
-    }
 }

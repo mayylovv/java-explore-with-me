@@ -5,20 +5,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.util.PaginationSetup;
 import ru.practicum.handler.NotFoundException;
 import ru.practicum.users.dto.NewUserDto;
 import ru.practicum.users.dto.UserDto;
-import ru.practicum.users.dto.UserMapper;
+import ru.practicum.users.mapper.UserMapper;
 import ru.practicum.users.model.User;
 import ru.practicum.users.repository.UserRepository;
+import ru.practicum.util.PaginationSetup;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.practicum.util.Messages.*;
-import static ru.practicum.users.dto.UserMapper.toUser;
-import static ru.practicum.users.dto.UserMapper.toUserDto;
+import static ru.practicum.users.mapper.UserMapper.toUser;
+import static ru.practicum.users.mapper.UserMapper.toUserDto;
 
 @Service
 @RequiredArgsConstructor
@@ -32,13 +31,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(NewUserDto userDto) {
         User user = userRepository.save(toUser(userDto));
-        log.info(SAVE_MODEL.getMessage(), user);
+        log.info("Сохранение {}", user);
         return toUserDto(user);
     }
 
     @Override
     public List<UserDto> getUsers(List<Long> ids, Integer from, Integer size) {
-        log.info(GET_MODEL_BY_ID.getMessage(), ids);
+        log.info("Получение по id = {}", ids);
         if (ids.isEmpty()) {
             return userRepository.findAll(new PaginationSetup(from, size, Sort.unsorted())).stream()
                     .map(UserMapper::toUserDto)
@@ -52,7 +51,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void deleteUserById(Long userId) {
-        log.info(DELETE_MODEL.getMessage(), userId);
+        log.info("Удаление по id = {}", userId);
         userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with id=" + userId + " was not found"));
         userRepository.deleteById(userId);

@@ -1,6 +1,9 @@
-package ru.practicum.users.dto;
+package ru.practicum.users.mapper;
 
 import lombok.experimental.UtilityClass;
+import ru.practicum.users.dto.NewUserDto;
+import ru.practicum.users.dto.UserDto;
+import ru.practicum.users.dto.UserShortDto;
 import ru.practicum.users.model.User;
 
 @UtilityClass

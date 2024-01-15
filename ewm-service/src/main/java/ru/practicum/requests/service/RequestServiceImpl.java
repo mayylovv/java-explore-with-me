@@ -4,14 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.requests.dto.EventRequestStatusUpdateRequest;
-import ru.practicum.requests.dto.EventRequestStatusUpdateResult;
 import ru.practicum.events.model.Event;
 import ru.practicum.events.repository.EventRepository;
-import ru.practicum.handler.ValidateException;
 import ru.practicum.handler.NotFoundException;
+import ru.practicum.handler.ValidateException;
+import ru.practicum.requests.dto.EventRequestStatusUpdateRequest;
+import ru.practicum.requests.dto.EventRequestStatusUpdateResult;
 import ru.practicum.requests.dto.ParticipationRequestDto;
-import ru.practicum.requests.dto.ParticipationRequestMapper;
+import ru.practicum.requests.mapper.ParticipationRequestMapper;
 import ru.practicum.requests.model.ParticipationRequest;
 import ru.practicum.requests.repository.RequestRepository;
 import ru.practicum.users.model.User;
@@ -23,11 +23,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static ru.practicum.util.Messages.*;
 import static ru.practicum.events.EventState.PUBLISHED;
 import static ru.practicum.requests.EventRequestStatus.*;
-import static ru.practicum.requests.dto.ParticipationRequestMapper.mapToNewParticipationRequest;
-import static ru.practicum.requests.dto.ParticipationRequestMapper.mapToParticipationRequestDto;
+import static ru.practicum.requests.mapper.ParticipationRequestMapper.mapToNewParticipationRequest;
+import static ru.practicum.requests.mapper.ParticipationRequestMapper.mapToParticipationRequestDto;
 
 @Service
 @RequiredArgsConstructor
@@ -107,7 +106,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public List<ParticipationRequestDto> getParticipationRequest(Long userId, Long eventId) {
-        log.info(GET_MODELS.getMessage());
+        log.info("Получение");
         // Получить информацию о запросах на участие в событии текущего пользователя
         if (eventRepository.findByIdAndInitiatorId(eventId, userId).isPresent()) {
             return requestRepository.findAllByEventId(eventId).stream()
@@ -137,7 +136,7 @@ public class RequestServiceImpl implements RequestService {
         // статус можно изменить только у заявок, находящихся в состоянии ожидания (Ожидается код ошибки 409)
         validRequestStatus(requests);
 
-        log.info(UPDATE_STATUS.getMessage());
+        log.info("Обновление статуса");
         switch (dtoRequest.getStatus()) {
             case CONFIRMED:
                 return saveConfirmedStatus(requests, event);
@@ -152,7 +151,7 @@ public class RequestServiceImpl implements RequestService {
     public List<ParticipationRequestDto> getParticipationRequestByUserId(Long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with id=" + userId + " was not found"));
-        log.info(GET_MODELS.getMessage());
+        log.info("Получение");
         return requestRepository.findAllByRequesterId(userId).stream()
                 .map(ParticipationRequestMapper::mapToParticipationRequestDto)
                 .collect(Collectors.toList());
@@ -165,7 +164,7 @@ public class RequestServiceImpl implements RequestService {
                 .orElseThrow(() -> new NotFoundException("User with id=" + userId + " was not found."));
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event with id=" + eventId + " was not found."));
-        log.info(GET_MODEL_BY_ID.getMessage(), event);
+        log.info("Получение по id = {}", event);
 
         // инициатор события не может добавить запрос на участие в своём событии
         if (userId.equals(event.getInitiator().getId())) {
@@ -183,7 +182,7 @@ public class RequestServiceImpl implements RequestService {
             throw new ValidateException("You cannot add a repeat request.");
         }
         ParticipationRequest newRequest = requestRepository.save(mapToNewParticipationRequest(event, user));
-        log.info(SAVE_MODEL.getMessage(), newRequest);
+        log.info("Сохранение {}", newRequest);
 
         if (newRequest.getStatus() == CONFIRMED) {
             event.setConfirmedRequests(event.getConfirmedRequests() + 1);
@@ -198,7 +197,7 @@ public class RequestServiceImpl implements RequestService {
         ParticipationRequest request = requestRepository.findByIdAndRequesterId(requestId, userId)
                 .orElseThrow(() -> new NotFoundException("Request with id=" + requestId + " was not found"));
         request.setStatus(CANCELED);
-        log.info(UPDATE_MODEL.getMessage(), request);
+        log.info("Обновление {}", request);
         return mapToParticipationRequestDto(requestRepository.save(request));
     }
 }

@@ -6,35 +6,38 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.dto.dto.ViewStats;
-import ru.practicum.events.EventState;
-import ru.practicum.events.SortEvents;
-import ru.practicum.util.PaginationSetup;
 import ru.practicum.StatsClient;
 import ru.practicum.categories.model.Category;
 import ru.practicum.categories.repository.CategoryRepository;
+import ru.practicum.dto.dto.ViewStats;
+import ru.practicum.events.EventState;
+import ru.practicum.events.SortEvents;
 import ru.practicum.events.StateActionEvent;
 import ru.practicum.events.dto.*;
+import ru.practicum.events.mapper.EventMapper;
 import ru.practicum.events.model.Event;
 import ru.practicum.events.repository.EventRepository;
 import ru.practicum.handler.NotFoundException;
-import ru.practicum.handler.ValidateException;
 import ru.practicum.handler.ValidateDateException;
+import ru.practicum.handler.ValidateException;
 import ru.practicum.users.model.User;
 import ru.practicum.users.repository.UserRepository;
+import ru.practicum.util.PaginationSetup;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import static ru.practicum.events.EventState.*;
 import static ru.practicum.events.SortEvents.EVENT_DATE;
 import static ru.practicum.events.SortEvents.VIEWS;
+import static ru.practicum.events.mapper.EventMapper.mapToEventFullDto;
+import static ru.practicum.events.mapper.EventMapper.mapToNewEvent;
 import static ru.practicum.util.Constants.*;
-import static ru.practicum.util.Messages.*;
-import static ru.practicum.events.EventState.*;
-import static ru.practicum.events.dto.EventMapper.mapToEventFullDto;
-import static ru.practicum.events.dto.EventMapper.mapToNewEvent;
 
 @Service
 @Slf4j
@@ -183,7 +186,7 @@ public class EventServiceImpl implements EventService {
                 .stream()
                 .map(eventShortDto -> "/events/" + eventShortDto.getId())
                 .collect(Collectors.toList());
-        log.info(GET_STATS.getMessage());
+        log.info("Получение");
         List<ViewStats> views = statsClient.getStats(START_DATE, END_DATE, uris, null).getBody();
 
         if (views != null) {
@@ -211,7 +214,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventShortDto> getAllEventsByUserId(Long userId, int from, int size) {
-        log.info(GET_MODELS.getMessage());
+        log.info("Получение");
         return eventRepository.findAllWithInitiatorByInitiatorId(userId, new PaginationSetup(from, size,
                 Sort.unsorted())).stream()
                 .map(EventMapper::mapToEventShortDto)
@@ -226,7 +229,7 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NotFoundException("User with id=" + userId + " was not found"));
         Category category = getCategoryForEvent(eventDto.getCategory());
         Event event = eventRepository.save(mapToNewEvent(eventDto, user, category));
-        log.info(SAVE_MODEL.getMessage(), event);
+        log.info("Сохранение {}", event);
         return mapToEventFullDto(event);
     }
 
@@ -249,7 +252,7 @@ public class EventServiceImpl implements EventService {
                     " two hours from the current moment");
         }
         updateEvent(event, eventDto);
-        log.info(UPDATE_MODEL.getMessage(), event);
+        log.info("Обновление {}", event);
         return mapToEventFullDto(eventRepository.save(event));
     }
 
@@ -261,7 +264,7 @@ public class EventServiceImpl implements EventService {
                                                 LocalDateTime rangeEnd,
                                                 Integer from,
                                                 Integer size) {
-        log.info(GET_MODELS.getMessage());
+        log.info("Получение");
         validDateParam(rangeStart, rangeEnd);
         PageRequest pageable = new PaginationSetup(from, size, Sort.unsorted());
         List<Event> events = eventRepository.findAllForAdmin(users, states, categories, getRangeStart(rangeStart),
@@ -280,9 +283,9 @@ public class EventServiceImpl implements EventService {
     public EventFullDto updateEventByIdAdmin(Long eventId, UpdateEventDto eventDto) {
         Event event = getEventById(eventId);
         updateEventAdmin(event, eventDto);
-        log.info(UPDATE_MODEL.getMessage(), event);
+        log.info("Обновление {}", event);
         event = eventRepository.save(event);
-        log.info(SAVE_MODEL.getMessage(), event);
+        log.info("Сохранение {}", event);
         return mapToEventFullDto(event);
     }
 
@@ -297,7 +300,7 @@ public class EventServiceImpl implements EventService {
                                                Integer from,
                                                Integer size,
                                                HttpServletRequest request) {
-        log.info(GET_MODELS.getMessage());
+        log.info("Получение");
         validDateParam(rangeStart, rangeEnd); // проверяем даты
         PaginationSetup pageable = new PaginationSetup(from, size, Sort.unsorted()); // сортировка
         // это публичный эндпоинт, соответственно в выдаче должны быть только опубликованные события
@@ -327,7 +330,7 @@ public class EventServiceImpl implements EventService {
 
         // информацию о том, что по этому эндпоинту был осуществлен и обработан запрос, нужно сохранить в сервисе статистики
         statsClient.saveStats(APP, request.getRequestURI(), request.getRemoteAddr(), LocalDateTime.now());
-        log.info(SAVE_STATS.getMessage());
+        log.info("Сохранение статистики");
 
         if (sort.equals(VIEWS)) { // если сортировка по количеству просмотров
            return result.stream()
@@ -339,9 +342,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventFullDto getEventByIdPublic(Long id, HttpServletRequest request) {
-        log.info(GET_MODEL_BY_ID.getMessage(), id);
+        log.info("Получение по id = {}", id);
         Event event = getEventById(id);
-        log.info(GET_MODEL_BY_ID.getMessage(), event);
+        log.info("Получение по id = {}", event);
 
         // событие должно быть опубликовано
         if (!event.getState().equals(PUBLISHED)) {

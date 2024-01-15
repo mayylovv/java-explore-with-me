@@ -1,7 +1,8 @@
-package ru.practicum.requests.dto;
+package ru.practicum.requests.mapper;
 
 import lombok.experimental.UtilityClass;
 import ru.practicum.events.model.Event;
+import ru.practicum.requests.dto.ParticipationRequestDto;
 import ru.practicum.requests.model.ParticipationRequest;
 import ru.practicum.users.model.User;
 

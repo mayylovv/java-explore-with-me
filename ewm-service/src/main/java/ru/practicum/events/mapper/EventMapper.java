@@ -1,13 +1,17 @@
-package ru.practicum.events.dto;
+package ru.practicum.events.mapper;
 
 import lombok.experimental.UtilityClass;
 import ru.practicum.categories.model.Category;
+import ru.practicum.events.dto.EventFullDto;
+import ru.practicum.events.dto.EventShortDto;
+import ru.practicum.events.dto.AdditionalEventInformation;
+import ru.practicum.events.dto.NewEventDto;
 import ru.practicum.events.model.Event;
 import ru.practicum.events.model.Location;
 import ru.practicum.users.model.User;
 
-import static ru.practicum.categories.dto.CategoryMapper.toCategoryDto;
-import static ru.practicum.users.dto.UserMapper.toUserShortDto;
+import static ru.practicum.categories.mapper.CategoryMapper.toCategoryDto;
+import static ru.practicum.users.mapper.UserMapper.toUserShortDto;
 
 @UtilityClass
 public class EventMapper {
@@ -41,7 +45,7 @@ public class EventMapper {
         eventFullDto.setParticipantLimit(event.getParticipantLimit());
         eventFullDto.setTitle(event.getTitle());
         eventFullDto.setState(event.getState());
-        EventFullDto.AdditionalEventInformation eventInformation = new EventFullDto.AdditionalEventInformation();
+        AdditionalEventInformation eventInformation = new AdditionalEventInformation();
         eventInformation.setDescription(event.getDescription());
         eventInformation.setCategory(toCategoryDto(event.getCategory()));
         eventInformation.setCreatedOn(event.getCreatedOn());
