@@ -11,12 +11,12 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.Collection;
 
+@Slf4j
+@Validated
 @RestController
 @RequestMapping("/categories")
 @RequiredArgsConstructor
-@Slf4j
-@Validated
-public class PublicCategoryController {
+public class CategoryControllerPublic {
 
 
     private final CategoryService categoryService;
@@ -25,13 +25,13 @@ public class PublicCategoryController {
     public Collection<CategoryDto> getCategory(@RequestParam(value = "from", defaultValue = "0")
                                                    @PositiveOrZero Integer from,
                                               @RequestParam(value = "size", defaultValue = "10") @Positive Integer size) {
-        log.info("Get category with parameters from {} size {}", from, size);
-        return categoryService.getCategory(from, size);
+        log.info("Получение категории с параметрами {} размерами {}", from, size);
+        return categoryService.getAllCategory(from, size);
     }
 
     @GetMapping("/{catId}")
     public CategoryDto getCategoryById(@PathVariable Long catId) {
-        log.info("Get category by Id {}", catId);
+        log.info("Получение категории с id = {}", catId);
         return categoryService.getCategoryById(catId);
     }
 }

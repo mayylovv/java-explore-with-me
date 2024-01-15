@@ -19,8 +19,9 @@ import java.util.stream.Collectors;
 import static ru.practicum.categories.mapper.CategoryMapper.toCategory;
 import static ru.practicum.categories.mapper.CategoryMapper.toCategoryDto;
 
-@Service
+
 @Slf4j
+@Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CategoryServiceImpl implements CategoryService {
@@ -29,7 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public CategoryDto saveCategory(CategoryDto categoryDto) {
+    public CategoryDto createCategory(CategoryDto categoryDto) {
         Category category = categoryRepository.save(toCategory(categoryDto));
         log.info("Сохранение {}", category);
         return toCategoryDto(category);
@@ -37,30 +38,29 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public void deleteCategoryById(Long id) {
+    public void deleteCategory(Long id) {
         categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Category with id=" + id + " was not found"));
-
+                .orElseThrow(() -> new NotFoundException("Категория с id = " + id + " не найдена"));
         try {
             categoryRepository.deleteById(id);
         } catch (Exception e) {
-            throw new ValidateException("The category is not empty");
+            throw new ValidateException("Категория не пустая");
         }
         log.info("Удаление по id = {}", id);
     }
 
     @Transactional
     @Override
-    public CategoryDto updateCategoryById(Long id, CategoryDto categoryDto) {
+    public CategoryDto updateCategory(Long id, CategoryDto categoryDto) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Category with id=" + id + " was not found"));
+                .orElseThrow(() -> new NotFoundException("Категория с id = " + id + " не найдена"));
         category.setName(categoryDto.getName());
         log.info("Обновление {}", category);
         return toCategoryDto(categoryRepository.save(category));
     }
 
     @Override
-    public List<CategoryDto> getCategory(int from, int size) {
+    public List<CategoryDto> getAllCategory(int from, int size) {
         log.info("Получение");
         return categoryRepository.findAll(new PaginationSetup(from, size, Sort.unsorted())).stream()
                 .map(CategoryMapper::toCategoryDto)
@@ -68,10 +68,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto getCategoryById(Long catId) {
-        Category category = categoryRepository.findById(catId)
-                .orElseThrow(() -> new NotFoundException("Category with id=" + catId + " was not found"));
-        log.info("Получение по id = {}", catId);
+    public CategoryDto getCategoryById(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Категория с id = " + id + " не найдена"));
+        log.info("Получение по id = {}", id);
         return toCategoryDto(category);
     }
 }
