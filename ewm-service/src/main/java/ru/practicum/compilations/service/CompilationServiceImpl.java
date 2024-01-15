@@ -22,29 +22,35 @@ import java.util.stream.Collectors;
 import static ru.practicum.compilations.mapper.CompilationMapper.mapToCompilationDto;
 import static ru.practicum.compilations.mapper.CompilationMapper.mapToNewCompilation;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CompilationServiceImpl implements CompilationService {
 
-    private final CompilationRepository compilationRepository;
     private final EventRepository eventRepository;
+    private final CompilationRepository compilationRepository;
 
-    private Compilation getCompilation(Long id) {
-        return compilationRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Compilation with id=" + id + " was not found"));
+    @Transactional
+    @Override
+    public CompilationDto createCompilation(NewCompilationDto newCompilationDto) {
+        Compilation compilation = mapToNewCompilation(newCompilationDto);
+        if (newCompilationDto.getEvents() != null) {
+            List<Event> events = eventRepository.findAllByIdIn(newCompilationDto.getEvents());
+            compilation.setEvents(events);
+        }
+        log.info("Сохранение {}", compilation);
+        return mapToCompilationDto(compilationRepository.save(compilation));
     }
 
     @Override
-    public List<CompilationDto> getAllCompilation(Boolean pinned, Integer from, Integer size) {
+    public List<CompilationDto> getAllCompilations(Boolean pinned, Integer from, Integer size) {
         log.info("Получение");
         if (pinned == null) {
            return compilationRepository.findAll(new PaginationSetup(from, size, Sort.unsorted())).getContent().stream()
                     .map(CompilationMapper::mapToCompilationDto)
                     .collect(Collectors.toList());
         }
-
         return compilationRepository.findAllByPinned(pinned, new PaginationSetup(from, size, Sort.unsorted()))
                 .getContent().stream()
                 .map(CompilationMapper::mapToCompilationDto)
@@ -56,19 +62,6 @@ public class CompilationServiceImpl implements CompilationService {
         Compilation compilation = getCompilation(id);
         log.info("Получение по id = {}", id);
         return mapToCompilationDto(compilation);
-    }
-
-    @Transactional
-    @Override
-    public CompilationDto saveCompilation(NewCompilationDto compilationDto) {
-        Compilation compilation = mapToNewCompilation(compilationDto);
-
-        if (compilationDto.getEvents() != null) {
-            List<Event> events = eventRepository.findAllByIdIn(compilationDto.getEvents());
-            compilation.setEvents(events);
-        }
-        log.info("Сохранение {}", compilation);
-        return mapToCompilationDto(compilationRepository.save(compilation));
     }
 
     @Transactional
@@ -85,7 +78,6 @@ public class CompilationServiceImpl implements CompilationService {
         Compilation compilation = getCompilation(compId);
         Boolean pinned = compilationDto.getPinned();
         String title = compilationDto.getTitle();
-
         if (compilationDto.getEvents() != null) {
             compilation.setEvents(eventRepository.findAllById(compilationDto.getEvents()));
         }
@@ -97,5 +89,10 @@ public class CompilationServiceImpl implements CompilationService {
         }
         log.info("Обновление {}", compilation);
         return mapToCompilationDto(compilationRepository.save(compilation));
+    }
+
+    private Compilation getCompilation(Long id) {
+        return compilationRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Компиляция с id = " + id + " не найдена"));
     }
 }

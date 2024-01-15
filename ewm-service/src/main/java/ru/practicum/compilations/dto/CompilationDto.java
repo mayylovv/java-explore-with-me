@@ -1,15 +1,19 @@
 package ru.practicum.compilations.dto;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.events.dto.EventShortDto;
 
 import java.util.List;
 
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CompilationDto {
 
-    private List<EventShortDto> events; // Список событий входящих в подборку;
-    private long id; // Идентификатор;
-    private boolean pinned; // Закреплена ли подборка на главной странице сайта;
-    private String title; // Заголовок подборки.
+    List<EventShortDto> events;
+    long id;
+    boolean pinned;
+    String title;
+
 }
