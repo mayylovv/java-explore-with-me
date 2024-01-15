@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.dto.EndpointHit;
 import ru.practicum.dto.dto.ViewStats;
-import ru.practicum.exception.ValidateDateException;
 import ru.practicum.service.StatService;
 
 import javax.validation.Valid;
