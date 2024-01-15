@@ -15,34 +15,34 @@ import javax.validation.constraints.PositiveOrZero;
 import java.util.Collection;
 import java.util.List;
 
+@Slf4j
+@Validated
 @RestController
 @RequestMapping("/admin/users")
 @RequiredArgsConstructor
-@Slf4j
-@Validated
-public class AdminUserController {
+public class UserController {
 
     private final UserService userService;
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public UserDto saveUser(@Valid @RequestBody NewUserDto userDto) {
-        log.info("Creating user {}", userDto);
+        log.info("Создание пользователя {}", userDto);
         return userService.createUser(userDto);
+    }
+
+    @DeleteMapping("/{userId}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable(value = "userId") Long userId) {
+        log.info("Удаление пользователя по id = {}", userId);
+        userService.deleteUserById(userId);
     }
 
     @GetMapping()
     public Collection<UserDto> getUsers(@RequestParam(defaultValue = "") List<Long> ids,
                                         @RequestParam(value = "from", defaultValue = "0") @PositiveOrZero Integer from,
                                         @RequestParam(value = "size", defaultValue = "10") @Positive Integer size) {
-        log.info("Get users by ids {}. Parameters: from {}, size {}", ids, from, size);
+        log.info("Получение пользователей");
         return userService.getUsers(ids, from, size);
-    }
-
-    @DeleteMapping("/{userId}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable(value = "userId") Long userId) {
-        log.info("Deleting user by Id {}", userId);
-        userService.deleteUserById(userId);
     }
 }

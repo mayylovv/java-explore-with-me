@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 import static ru.practicum.users.mapper.UserMapper.toUser;
 import static ru.practicum.users.mapper.UserMapper.toUserDto;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUserById(Long userId) {
         log.info("Удаление по id = {}", userId);
         userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User with id=" + userId + " was not found"));
+                .orElseThrow(() -> new NotFoundException("Пользователь с id = " + userId + " не найден"));
         userRepository.deleteById(userId);
     }
 }
