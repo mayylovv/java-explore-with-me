@@ -18,6 +18,7 @@ import java.util.Collection;
 @Validated
 public class PublicCategoryController {
 
+
     private final CategoryService categoryService;
 
     @GetMapping
