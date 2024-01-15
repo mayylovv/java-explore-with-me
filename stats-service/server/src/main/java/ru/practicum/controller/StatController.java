@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
-import static ru.practicum.dto.Constant.DATE_PATTERN;
+import static ru.practicum.dto.util.Constant.DATE_PATTERN;
 
 @RestController
 @RequiredArgsConstructor
