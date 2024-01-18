@@ -16,6 +16,7 @@ import javax.validation.Valid;
 public class CategoryControllerAdmin {
 
     private final CategoryService categoryService;
+    static final String CATEGORY_PATH = "/{catId}";
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -24,14 +25,14 @@ public class CategoryControllerAdmin {
         return categoryService.createCategory(categoryDto);
     }
 
-    @PatchMapping("/{catId}")
+    @PatchMapping(CATEGORY_PATH)
     public CategoryDto updateCategory(@PathVariable(value = "catId") Long catId,
                                       @Valid @RequestBody CategoryDto categoryDto) {
         log.info("Обновление категории {} с id {}", categoryDto, catId);
         return categoryService.updateCategory(catId, categoryDto);
     }
 
-    @DeleteMapping("/{catId}")
+    @DeleteMapping(CATEGORY_PATH)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteCategory(@PathVariable(value = "catId") Long catId) {
         log.info("Удаление категории с id {}", catId);

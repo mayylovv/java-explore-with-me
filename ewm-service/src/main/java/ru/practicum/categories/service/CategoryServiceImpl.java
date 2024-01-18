@@ -40,11 +40,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteCategory(Long id) {
         categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Категория с id = " + id + " не найдена"));
+                .orElseThrow(() -> new NotFoundException(String.format("Категория с id = %d не найдена", id)));
         try {
             categoryRepository.deleteById(id);
         } catch (Exception e) {
-            throw new ValidateException("Категория не пустая");
+            throw new ValidateException(String.format("Категория c id = %d не пустая", id));
         }
         log.info("Удаление по id = {}", id);
     }
@@ -53,7 +53,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto updateCategory(Long id, CategoryDto categoryDto) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Категория с id = " + id + " не найдена"));
+                .orElseThrow(() -> new NotFoundException(String.format("Категория с id = %d не найдена", id)));
         category.setName(categoryDto.getName());
         log.info("Обновление {}", category);
         return toCategoryDto(categoryRepository.save(category));
@@ -70,7 +70,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto getCategoryById(Long id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Категория с id = " + id + " не найдена"));
+                .orElseThrow(() -> new NotFoundException(String.format("Категория с id = %d не найдена", id)));
         log.info("Получение по id = {}", id);
         return toCategoryDto(category);
     }
