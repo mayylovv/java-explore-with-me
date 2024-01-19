@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   stats-server:
-    build: ewm-stats-service/server
+    build: stats-service/server
     image: stats-server
     container_name: stats-server
     ports:
@@ -24,7 +24,7 @@ services:
       - POSTGRES_PASSWORD=1233
 
   ewm-service:
-    build: ewm-main-service
+    build: ewm-service
     image: ewm-service
     container_name: ewm-service
     ports:
