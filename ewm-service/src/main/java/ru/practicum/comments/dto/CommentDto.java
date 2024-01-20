@@ -29,7 +29,7 @@ public class CommentDto {
     Long authorId;
 
     @Null(groups = {Marker.OnCreate.class,Marker.OnUpdate.class})
-    Long eventId;;
+    Long eventId;
 
     @Null(groups = {Marker.OnCreate.class,Marker.OnUpdate.class})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = PATTERN_DATE)
