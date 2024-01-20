@@ -2,6 +2,7 @@ package ru.practicum.events.mapper;
 
 import lombok.experimental.UtilityClass;
 import ru.practicum.categories.model.Category;
+import ru.practicum.comments.dto.CommentDto;
 import ru.practicum.events.dto.EventFullDto;
 import ru.practicum.events.dto.EventShortDto;
 import ru.practicum.events.dto.AdditionalInformation;
@@ -9,6 +10,8 @@ import ru.practicum.events.dto.NewEventDto;
 import ru.practicum.events.model.Event;
 import ru.practicum.events.model.Location;
 import ru.practicum.users.model.User;
+
+import java.util.List;
 
 import static ru.practicum.categories.mapper.CategoryMapper.toCategoryDto;
 import static ru.practicum.users.mapper.UserMapper.toUserShortDto;
@@ -45,7 +48,7 @@ public class EventMapper {
         return event;
     }
 
-    public static EventFullDto mapToEventFullDto(Event event) {
+    public static EventFullDto mapToEventFullDto(Event event, List<CommentDto> comments) {
         EventFullDto eventFullDto = new EventFullDto();
         eventFullDto.setAnnotation(event.getAnnotation());
         eventFullDto.setConfirmedRequests(event.getConfirmedRequests());
@@ -63,10 +66,13 @@ public class EventMapper {
         eventInformation.setCreatedOn(event.getCreatedOn());
         eventInformation.setInitiator(toUserShortDto(event.getInitiator()));
         eventInformation.setRequestModeration(event.getRequestModeration());
+
         if (event.getPublishedOn() != null) {
             eventInformation.setPublishedOn(event.getPublishedOn());
         }
+        eventInformation.setComments(comments);
         eventFullDto.setEventInformation(eventInformation);
+
         return eventFullDto;
     }
 }

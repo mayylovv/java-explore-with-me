@@ -36,7 +36,6 @@ public class EventControllerPrivate {
     }
 
     @GetMapping
-    @ResponseStatus(value = HttpStatus.OK)
     public Collection<EventShortDto> getEventsByUserId(@PathVariable(value = "userId") Long userId,
                                                        @RequestParam(value = "from", defaultValue = "0") @PositiveOrZero Integer from,
                                                        @RequestParam(value = "size", defaultValue = "10") @Positive Integer size) {
@@ -45,7 +44,6 @@ public class EventControllerPrivate {
     }
 
     @GetMapping("/{eventId}")
-    @ResponseStatus(value = HttpStatus.OK)
     public EventFullDto getEventById(@PathVariable(value = "userId") Long userId,
                                      @PathVariable(value = "eventId") Long eventId) {
         log.info("Получения события по userId = {} и eventId = {}", userId, eventId);
@@ -53,7 +51,6 @@ public class EventControllerPrivate {
     }
 
     @PatchMapping("/{eventId}")
-    @ResponseStatus(value = HttpStatus.OK)
     public EventFullDto updateEvent(@PathVariable(value = "userId") Long userId,
                                     @PathVariable(value = "eventId") Long eventId,
                                     @Valid @RequestBody UpdateEventDto eventDto) {
@@ -62,7 +59,6 @@ public class EventControllerPrivate {
     }
 
     @GetMapping("/{eventId}/requests")
-    @ResponseStatus(value = HttpStatus.OK)
     public Collection<RequestDto> getRequestByIdEvent(@PathVariable(value = "userId") Long userId,
                                                       @PathVariable(value = "eventId") Long eventId) {
         log.info("Получение запроса на участие в событии eventId = {} пользователя с userId = {} and ", eventId, userId);
@@ -70,7 +66,6 @@ public class EventControllerPrivate {
     }
 
     @PatchMapping("/{eventId}/requests")
-    @ResponseStatus(value = HttpStatus.OK)
     public RequestStatusConfirm updateEventRequestStatus(@PathVariable(value = "userId") Long userId,
                                                          @PathVariable(value = "eventId") Long eventId,
                                                          @RequestBody RequestStatusParticipation updateRequest) {

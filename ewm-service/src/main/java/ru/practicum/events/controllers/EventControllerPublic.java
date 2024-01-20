@@ -3,12 +3,11 @@ package ru.practicum.events.controllers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.events.enums.SortEvents;
 import ru.practicum.events.dto.EventFullDto;
 import ru.practicum.events.dto.EventShortDto;
+import ru.practicum.events.enums.SortEvents;
 import ru.practicum.events.service.EventService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,14 +30,12 @@ public class EventControllerPublic {
     private final EventService eventService;
 
     @GetMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.OK)
     public EventFullDto getEventByIdPublic(@PathVariable(value = "id") Long id, HttpServletRequest request) {
         log.info("Получение события по id = {} (Public)", id);
         return eventService.getEventByIdPublic(id, request);
     }
 
     @GetMapping
-    @ResponseStatus(value = HttpStatus.OK)
     public Collection<EventShortDto> getEventsPublic(@RequestParam(required = false) String text,
                                                      @RequestParam(required = false) List<Long> categories,
                                                      @RequestParam(required = false) Boolean paid,

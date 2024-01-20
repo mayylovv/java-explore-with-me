@@ -30,7 +30,6 @@ public class EventControllerAdmin {
     private final EventService eventService;
 
     @PatchMapping("/{eventId}")
-    @ResponseStatus(value = HttpStatus.OK)
     public EventFullDto updateEventAdmin(@PathVariable(value = "eventId") Long eventId,
                                          @Valid @RequestBody UpdateEventDto updateEventDto) {
         log.info("Обновление события {} по id = {}", updateEventDto, eventId);
@@ -38,7 +37,6 @@ public class EventControllerAdmin {
     }
 
     @GetMapping
-    @ResponseStatus(value = HttpStatus.OK)
     public Collection<EventFullDto> getEvents(@RequestParam(required = false) List<Long> users,
                                               @RequestParam(required = false) List<EventState> states,
                                               @RequestParam(required = false) List<Long> categories,
