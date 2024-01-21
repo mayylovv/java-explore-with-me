@@ -1,18 +1,15 @@
 package ru.practicum.dto.dto;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ViewStats {
 
-    String app;
-    String uri;
-    long hits;
+    private String app; // Название сервиса, example: ewm-main-service;
+    private String uri; // URI сервиса, example: /events/1;
+    private long hits; // Количество просмотров, example: 6.
 }

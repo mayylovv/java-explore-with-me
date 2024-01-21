@@ -1,7 +1,7 @@
 package ru.practicum.events.service;
 
-import ru.practicum.events.enums.EventState;
-import ru.practicum.events.enums.SortEvents;
+import ru.practicum.events.EventState;
+import ru.practicum.events.SortEvents;
 import ru.practicum.events.dto.EventFullDto;
 import ru.practicum.events.dto.EventShortDto;
 import ru.practicum.events.dto.NewEventDto;
@@ -15,7 +15,7 @@ public interface EventService {
 
     List<EventShortDto> getAllEventsByUserId(Long userId, int from, int size);
 
-    EventFullDto createEvent(Long userId, NewEventDto eventDto);
+    EventFullDto saveEventByIdUser(Long userId, NewEventDto eventDto);
 
     EventFullDto getEventById(Long userId, Long eventId);
 

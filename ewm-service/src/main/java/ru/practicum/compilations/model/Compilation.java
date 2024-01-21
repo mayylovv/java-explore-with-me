@@ -1,34 +1,46 @@
 package ru.practicum.compilations.model;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.DynamicUpdate;
-import lombok.experimental.FieldDefaults;
 import ru.practicum.events.model.Event;
 
 import javax.persistence.*;
 import java.util.List;
 
-@Data
 @Entity
-@DynamicUpdate
-@EqualsAndHashCode
 @Table(name = "compilations")
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString
+@Getter
+@Setter
+@EqualsAndHashCode
+@DynamicUpdate
 public class Compilation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false)
-    Long id;
+    @Column(
+            name = "id",
+            updatable = false
+    )
+    private Long id;  // Идентификатор;
 
     @Column(name = "pinned", nullable = false)
-    Boolean pinned;
+    private Boolean pinned; // Закреплена ли подборка на главной странице сайта;
 
     @Column(name = "title", nullable = false)
-    String title;
+    private String title; // Заголовок подборки.
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "compilation_events", joinColumns = @JoinColumn(name = "compilation_id"),
-            inverseJoinColumns = @JoinColumn(name = "event_id"))
-    List<Event> events;
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(
+            name = "compilation_events",
+            joinColumns = @JoinColumn(name = "compilation_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id")
+    )
+    private List<Event> events;
 }

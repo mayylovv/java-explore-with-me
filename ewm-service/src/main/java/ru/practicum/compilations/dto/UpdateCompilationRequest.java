@@ -1,22 +1,21 @@
 package ru.practicum.compilations.dto;
 
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.Size;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateCompilationRequest {
-
-    Set<Long> events;
-
-    Boolean pinned = false;
+    private Set<Long> events; // Список идентификаторов событий входящих в подборку;
+    private Boolean pinned = false; // Закреплена ли подборка на главной странице сайта;
 
     @Size(min = 1, max = 50)
-    String title;
-
+    private String title; // Заголовок подборки.
 }

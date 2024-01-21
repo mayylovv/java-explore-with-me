@@ -17,12 +17,14 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findAllByEventId(Long eventId);
 
-    @Query("select e " +
-            "from Comment AS e " +
-            "JOIN FETCH e.event " +
-            "JOIN FETCH e.author " +
-            "where (:author is null or e.author.id in :author) " +
-            "and (:event is null or e.event.id in :event)")
+    @Query(
+            "select e " +
+                    "from Comment AS e " +
+                    "JOIN FETCH e.event " +
+                    "JOIN FETCH e.author " +
+                    "where (:author is null or e.author.id in :author) " +
+                    "and (:event is null or e.event.id in :event)"
+    )
     List<Comment> findAllByAuthorIdOrEventId(Long author, Long event, PageRequest pageable);
 
     List<Comment> findByEventIdIn(Set<Long> longs);

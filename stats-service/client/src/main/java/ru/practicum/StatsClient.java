@@ -14,29 +14,15 @@ import ru.practicum.dto.dto.ViewStats;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Slf4j
 @Service
+@Slf4j
 @PropertySource(value = {"classpath:statsClient.properties"})
 public class StatsClient {
 
-    private static final String value = "${stats.server.url}";
     private final WebClient client;
 
-    public StatsClient(@Value(value) String baseUrl) {
+    public StatsClient(@Value("${stats.server.url}") String baseUrl) {
         this.client = WebClient.create(baseUrl);
-    }
-
-    public void saveStats(String app, String uri, String ip, LocalDateTime timestamp) {
-        final EndpointHit endpointHit = new EndpointHit(app, uri, ip, timestamp);
-
-        this.client.post()
-                .uri("/hit")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(new EndpointHit(app, uri, ip, timestamp))
-                .retrieve()
-                .toBodilessEntity()
-                .doOnNext(c -> log.info("Сохранить статистику {}", endpointHit))
-                .block();
     }
 
     public ResponseEntity<List<ViewStats>> getStats(String start, String end, List<String> uris, Boolean unique) {
@@ -51,8 +37,20 @@ public class StatsClient {
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .toEntityList(ViewStats.class)
-                .doOnNext(c -> log.info("Получение статистики с параметрами: дата начала {}, дата окончания {}, URI {}, " +
-                        "уникальные {}", start, end, uris, unique))
+                .doOnNext(c -> log.info("Get stats with param: start date {}, end date {}, uris {}, unique {}",
+                        start, end, uris, unique))
+                .block();
+    }
+
+    public void saveStats(String app, String uri, String ip, LocalDateTime timestamp) {
+
+        this.client.post()
+                .uri("/hit")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new EndpointHit(app, uri, ip, timestamp))
+                .retrieve()
+                .toBodilessEntity()
+                .doOnNext(c -> log.info("Save stats"))
                 .block();
     }
 }

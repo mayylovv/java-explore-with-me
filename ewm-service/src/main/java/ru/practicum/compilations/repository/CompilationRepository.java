@@ -7,5 +7,4 @@ import ru.practicum.compilations.model.Compilation;
 
 public interface CompilationRepository extends JpaRepository<Compilation, Long> {
     Page<Compilation> findAllByPinned(Boolean pinned, PaginationSetup paginationSetup);
-
 }

@@ -2,7 +2,6 @@ package ru.practicum.comments.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 import ru.practicum.util.Marker;
 
 import javax.validation.constraints.NotBlank;
@@ -12,27 +11,22 @@ import java.time.LocalDateTime;
 
 import static ru.practicum.util.Constants.PATTERN_DATE;
 
-@Data
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentDto {
-
     @Null(groups = {Marker.OnCreate.class,Marker.OnUpdate.class})
-    Long id;
-
+    private Long id; // уникальный идентификатор комментария;
     @NotBlank
     @Size(min = 2, max = 2000)
-    String text;
-
+    private String text; // содержимое комментария;
     @Null(groups = {Marker.OnCreate.class,Marker.OnUpdate.class})
-    Long authorId;
-
+    private Long authorId; // автор комментария;
     @Null(groups = {Marker.OnCreate.class,Marker.OnUpdate.class})
-    Long eventId;
-
+    private Long eventId; // уникальный идентификатор события;
     @Null(groups = {Marker.OnCreate.class,Marker.OnUpdate.class})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = PATTERN_DATE)
-    LocalDateTime created;
-
+    private LocalDateTime created; // дата создания комментария.
 }

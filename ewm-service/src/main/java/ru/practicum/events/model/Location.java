@@ -1,16 +1,21 @@
 package ru.practicum.events.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
 
-@Data
+@ToString
+@Getter
+@Setter
 @AllArgsConstructor
 public class Location {
 
     @NotNull
-    Float lat;
+    private Float lat; // Широта;
 
     @NotNull
-    Float lon;
+    private Float lon; // Долгота;
 }
