@@ -3,36 +3,48 @@ package ru.practicum.events.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
-import ru.practicum.events.enums.EventState;
+import ru.practicum.categories.dto.CategoryDto;
+import ru.practicum.events.EventState;
 import ru.practicum.events.model.Location;
+import ru.practicum.users.dto.UserShortDto;
 
 import java.time.LocalDateTime;
 
 import static ru.practicum.util.Constants.PATTERN_DATE;
 
-@Data
+@Setter
+@Getter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventFullDto {
-
-    Long id;
-    String title;
-    String annotation;
-
+    private Long id;
+    private String title;
+    private String annotation;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = PATTERN_DATE)
-    LocalDateTime eventDate;
-
-    Location location;
-    boolean paid;
-    int participantLimit;
-    int confirmedRequests;
-    long views;
-    EventState state;
-
+    private LocalDateTime eventDate;
+    private Location location;
+    private boolean paid;
+    private int participantLimit;
+    private long confirmedRequests;
+    private long views;
+    private EventState state;
     @JsonUnwrapped
-    AdditionalInformation eventInformation;
+    public AdditionalEventInformation eventInformation;
 
-
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @ToString
+    protected static class AdditionalEventInformation {
+        private String description;
+        private CategoryDto category;
+        private boolean requestModeration;
+        private UserShortDto initiator;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = PATTERN_DATE)
+        private LocalDateTime publishedOn;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = PATTERN_DATE)
+        private LocalDateTime createdOn;
+    }
 }

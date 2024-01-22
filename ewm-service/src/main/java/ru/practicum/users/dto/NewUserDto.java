@@ -1,23 +1,20 @@
 package ru.practicum.users.dto;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Getter;
+import lombok.ToString;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-@Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@ToString
 public class NewUserDto {
-
     @NotBlank
     @Email
     @Size(max = 254, min = 6)
-    String email;
-
-    @NotBlank(message = "Field: name. Error: must not be blank. Value: null")
+    private String email;
+    @NotBlank(message = "Поле name не может быть пустым")
     @Size(max = 250, min = 2)
-    String name;
+    private String name;
 }

@@ -1,20 +1,21 @@
 package ru.practicum.categories.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
-@Data
 @Entity
 @Table(name = "categories", uniqueConstraints = {@UniqueConstraint(name = "category_name_unique", columnNames = "name")})
+@Getter
+@Setter
+@ToString
 public class Category {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
-    Long id;
-
+    private Long id;
     @Column(name = "name", nullable = false, length = 50)
-    String name;
-
+    private String name;
 }

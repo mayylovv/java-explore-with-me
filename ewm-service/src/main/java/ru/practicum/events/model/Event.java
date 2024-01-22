@@ -1,80 +1,63 @@
 package ru.practicum.events.model;
 
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.practicum.categories.model.Category;
-import ru.practicum.events.enums.EventState;
+import ru.practicum.events.EventState;
 import ru.practicum.users.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 import static ru.practicum.util.Constants.PATTERN_DATE;
-import static ru.practicum.events.enums.EventState.PENDING;
+import static ru.practicum.events.EventState.PENDING;
 
-@Data
 @Entity
-@DynamicUpdate
 @Table(name = "events")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString
+@Getter
+@Setter
+@DynamicUpdate
 public class Event {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
-    Long id;
-
+    private Long id;
     @Column(name = "annotation", nullable = false, length = 2000)
-    String annotation;
-
+    private String annotation;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
-    Category category;
-
+    private Category category;
     @Column(name = "description", nullable = false, length = 7000)
-    String description;
-
+    private String description;
     @Column(name = "event_date", nullable = false)
     @DateTimeFormat(pattern = PATTERN_DATE)
-    LocalDateTime eventDate;
-
+    private LocalDateTime eventDate;
     @Column(name = "location_lat", nullable = false)
-    float lat;
-
+    private float lat;
     @Column(name = "location_lon", nullable = false)
-    float lon;
-
+    private float lon;
     @Column(name = "paid", nullable = false)
-    Boolean paid;
-
+    private Boolean paid;
     @Column(name = "participant_limit", nullable = false)
-    Integer participantLimit;
-
-    @Column(name = "confirmed_requests")
-    Integer confirmedRequests = 0;
-
+    private Integer participantLimit;
     @Column(name = "request_moderation", nullable = false)
-    Boolean requestModeration;
-
+    private Boolean requestModeration;
     @Column(name = "title", nullable = false, length = 120)
-    String title;
-
+    private String title;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "initiator_id", nullable = false)
-    User initiator;
-
+    private User initiator;
     @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = false)
-    EventState state = PENDING;
-
+    private EventState state = PENDING;
     @Column(name = "created_on", nullable = false)
     @DateTimeFormat(pattern = PATTERN_DATE)
-    LocalDateTime createdOn = LocalDateTime.now();
-
+    private LocalDateTime createdOn = LocalDateTime.now();
     @Column(name = "published_on")
     @DateTimeFormat(pattern = PATTERN_DATE)
-    LocalDateTime publishedOn;
+    private LocalDateTime publishedOn;
 }
