@@ -22,21 +22,23 @@ public class CompilationControllerAdmin {
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public CompilationDto createCompilation(@Valid @RequestBody NewCompilationDto newCompilationDto) {
-        log.info("Создание запроса на компиляцию {}", newCompilationDto);
+        log.info("Обновление запроса на компиляцию {}", newCompilationDto);
         return compilationService.createCompilation(newCompilationDto);
     }
 
     @PatchMapping("/{compId}")
     public CompilationDto updateCompilation(@PathVariable(value = "compId") Long compId,
-                                            @Valid @RequestBody UpdateCompilationRequest updateCompilationRequest) {
-        log.info("Обновление запроса на компиляцию {} с id {}", updateCompilationRequest, compId);
-        return compilationService.updateCompilationByID(compId, updateCompilationRequest);
+                                            @Valid @RequestBody UpdateCompilationRequest compilationDto) {
+        log.info("PATCH '/admin/compilations/{compId}'. Запрос на обновление подборки с id {} ", compId);
+        CompilationDto response = compilationService.updateCompilation(compId, compilationDto);
+        log.info("PATCH '/admin/compilations/{compId}'. Ответ, подборка с id {} успешно обновлена {} ", compId, response);
+        return response;
     }
 
     @DeleteMapping("/{compId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable(value = "compId") Long compId) {
         log.info("Удаление компиляции по id {}", compId);
-        compilationService.deleteCompilationById(compId);
+        compilationService.deleteCompilation(compId);
     }
 }

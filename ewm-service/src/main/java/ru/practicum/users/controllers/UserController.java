@@ -17,9 +17,9 @@ import java.util.List;
 
 @Slf4j
 @Validated
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/admin/users")
-@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;

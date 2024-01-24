@@ -7,15 +7,14 @@ import ru.practicum.events.dto.EventShortDto;
 import ru.practicum.events.dto.NewEventDto;
 import ru.practicum.events.dto.UpdateEventDto;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventService {
 
-    List<EventShortDto> getAllEventsByUserId(Long userId, int from, int size);
-
     EventFullDto createEvent(Long userId, NewEventDto eventDto);
+
+    List<EventShortDto> getAllEventsByUserId(Long userId, int from, int size);
 
     EventFullDto getEventById(Long userId, Long eventId);
 
@@ -28,7 +27,7 @@ public interface EventService {
 
     List<EventShortDto> getEventsPublic(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart,
                                         LocalDateTime rangeEnd, Boolean onlyAvailable, SortEvents sort, Integer from,
-                                        Integer size, HttpServletRequest request);
+                                        Integer size, String url, String ip);
 
-    EventFullDto getEventByIdPublic(Long id, HttpServletRequest request);
+    EventFullDto getEventByIdPublic(Long id, String url, String ip);
 }

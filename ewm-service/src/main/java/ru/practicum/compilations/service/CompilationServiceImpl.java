@@ -5,38 +5,38 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.compilations.dto.UpdateCompilationRequest;
+import ru.practicum.events.model.Event;
+import ru.practicum.util.PaginationSetup;
 import ru.practicum.compilations.dto.CompilationDto;
 import ru.practicum.compilations.mapper.CompilationMapper;
 import ru.practicum.compilations.dto.NewCompilationDto;
-import ru.practicum.compilations.dto.UpdateCompilationRequest;
 import ru.practicum.compilations.model.Compilation;
 import ru.practicum.compilations.repository.CompilationRepository;
-import ru.practicum.events.model.Event;
 import ru.practicum.events.repository.EventRepository;
 import ru.practicum.exceptions.NotFoundException;
-import ru.practicum.util.PaginationSetup;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.practicum.compilations.mapper.CompilationMapper.mapToCompilationDto;
 import static ru.practicum.compilations.mapper.CompilationMapper.mapToNewCompilation;
+import static ru.practicum.compilations.mapper.CompilationMapper.mapToCompilationDto;
 
-@Slf4j
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CompilationServiceImpl implements CompilationService {
 
-    private final EventRepository eventRepository;
     private final CompilationRepository compilationRepository;
+    private final EventRepository eventRepository;
 
     @Transactional
     @Override
-    public CompilationDto createCompilation(NewCompilationDto newCompilationDto) {
-        Compilation compilation = mapToNewCompilation(newCompilationDto);
-        if (newCompilationDto.getEvents() != null) {
-            List<Event> events = eventRepository.findAllByIdIn(newCompilationDto.getEvents());
+    public CompilationDto createCompilation(NewCompilationDto compilationDto) {
+        Compilation compilation = mapToNewCompilation(compilationDto);
+        if (compilationDto.getEvents() != null) {
+            List<Event> events = eventRepository.findAllByIdIn(compilationDto.getEvents());
             compilation.setEvents(events);
         }
         log.info("Сохранение {}", compilation);
@@ -47,7 +47,7 @@ public class CompilationServiceImpl implements CompilationService {
     public List<CompilationDto> getAllCompilations(Boolean pinned, Integer from, Integer size) {
         log.info("Получение");
         if (pinned == null) {
-           return compilationRepository.findAll(new PaginationSetup(from, size, Sort.unsorted())).getContent().stream()
+            return compilationRepository.findAll(new PaginationSetup(from, size, Sort.unsorted())).getContent().stream()
                     .map(CompilationMapper::mapToCompilationDto)
                     .collect(Collectors.toList());
         }
@@ -58,15 +58,15 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-    public CompilationDto getCompilationById(Long id) {
-        Compilation compilation = getCompilation(id);
+    public CompilationDto getCompilation(Long id) {
+        Compilation compilation = getCompilationById(id);
         log.info("Получение по id = {}", id);
         return mapToCompilationDto(compilation);
     }
 
     @Transactional
     @Override
-    public void deleteCompilationById(Long compId) {
+    public void deleteCompilation(Long compId) {
         log.info("Удаление по id = {}", compId);
         getCompilation(compId);
         compilationRepository.deleteById(compId);
@@ -74,8 +74,8 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Transactional
     @Override
-    public CompilationDto updateCompilationByID(Long compId, UpdateCompilationRequest compilationDto) {
-        Compilation compilation = getCompilation(compId);
+    public CompilationDto updateCompilation(Long compId, UpdateCompilationRequest compilationDto) {
+        Compilation compilation = getCompilationById(compId);
         Boolean pinned = compilationDto.getPinned();
         String title = compilationDto.getTitle();
         if (compilationDto.getEvents() != null) {
@@ -91,7 +91,7 @@ public class CompilationServiceImpl implements CompilationService {
         return mapToCompilationDto(compilationRepository.save(compilation));
     }
 
-    private Compilation getCompilation(Long id) {
+    private Compilation getCompilationById(Long id) {
         return compilationRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Компиляция с id = " + id + " не найдена"));
     }

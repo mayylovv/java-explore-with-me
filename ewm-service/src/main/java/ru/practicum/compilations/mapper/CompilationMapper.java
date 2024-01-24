@@ -24,6 +24,7 @@ public class CompilationMapper {
         return dto;
     }
 
+
     public static Compilation mapToNewCompilation(NewCompilationDto compilationDto) {
         Compilation compilation = new Compilation();
         if (compilationDto.getPinned() != null) {
@@ -32,4 +33,5 @@ public class CompilationMapper {
         compilation.setTitle(compilationDto.getTitle());
         return compilation;
     }
+
 }

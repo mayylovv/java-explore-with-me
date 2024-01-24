@@ -23,8 +23,8 @@ import static ru.practicum.util.Constants.PATTERN_DATE;
 @Slf4j
 @Validated
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/admin/events")
+@RequiredArgsConstructor
 public class EventControllerAdmin {
 
     private final EventService eventService;

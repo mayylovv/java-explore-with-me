@@ -18,15 +18,13 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class CategoryControllerPublic {
 
-
     private final CategoryService categoryService;
 
     @GetMapping
-    public Collection<CategoryDto> getCategory(@RequestParam(value = "from", defaultValue = "0")
-                                                   @PositiveOrZero Integer from,
-                                              @RequestParam(value = "size", defaultValue = "10") @Positive Integer size) {
+    public Collection<CategoryDto> getCategoryById(@RequestParam(value = "from", defaultValue = "0") @PositiveOrZero Integer from,
+                                                   @RequestParam(value = "size", defaultValue = "10") @Positive Integer size) {
         log.info("Получение категории с параметрами {} размерами {}", from, size);
-        return categoryService.getAllCategory(from, size);
+        return categoryService.getAllCategories(from, size);
     }
 
     @GetMapping("/{catId}")

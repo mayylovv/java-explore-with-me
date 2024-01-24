@@ -21,11 +21,11 @@ import java.util.List;
 
 import static ru.practicum.util.Constants.PATTERN_DATE;
 
-@Slf4j
-@Validated
 @RestController
 @RequestMapping("/events")
 @RequiredArgsConstructor
+@Slf4j
+@Validated
 public class EventControllerPublic {
 
     private final EventService eventService;
@@ -34,7 +34,9 @@ public class EventControllerPublic {
     @ResponseStatus(value = HttpStatus.OK)
     public EventFullDto getEventByIdPublic(@PathVariable(value = "id") Long id, HttpServletRequest request) {
         log.info("Получение события по id = {} (Public)", id);
-        return eventService.getEventByIdPublic(id, request);
+        String ip = request.getRemoteAddr();
+        String url = request.getRequestURI();
+        return eventService.getEventByIdPublic(id, url, ip);
     }
 
     @GetMapping
@@ -54,7 +56,11 @@ public class EventControllerPublic {
         log.info("Получение события с параметрами: text = {}, categories = {}, paid = {}, rangeStart = {}, rangeEnd = {}, " +
                         "onlyAvailable = {}, sort = {}, from = {}, size = {} (Public)", text, categories, paid, rangeStart,
                 rangeEnd, onlyAvailable, sort, from, size);
+        String ip = request.getRemoteAddr();
+        String url = request.getRequestURI();
         return eventService.getEventsPublic(text, categories, paid, rangeStart, rangeEnd,
-                onlyAvailable, sortParam, from, size, request);
+                onlyAvailable, sortParam, from, size, url, ip);
     }
+
+
 }

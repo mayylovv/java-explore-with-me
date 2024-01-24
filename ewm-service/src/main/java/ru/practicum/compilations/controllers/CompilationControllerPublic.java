@@ -23,14 +23,16 @@ public class CompilationControllerPublic {
     @GetMapping("/{compId}")
     public CompilationDto getCompilation(@PathVariable Long compId) {
         log.info("Получение компиляций с id {}", compId);
-        return serviceCompilation.getCompilationById(compId);
+        return serviceCompilation.getCompilation(compId);
     }
 
     @GetMapping
-    public Collection<CompilationDto> getCompilation(@RequestParam(required = false) Boolean pinned,
-                                                     @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
-                                                     @RequestParam(defaultValue = "10") @Positive Integer size) {
+    public Collection<CompilationDto> getCompilations(@RequestParam(required = false) Boolean pinned,
+                                                      @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                                      @RequestParam(defaultValue = "10") @Positive Integer size) {
         log.info("Получение компиляций с параметрами: pinned {} from {} size {}", pinned, from, size);
         return serviceCompilation.getAllCompilations(pinned, from, size);
     }
+
+
 }
