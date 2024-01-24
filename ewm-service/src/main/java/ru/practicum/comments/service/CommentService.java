@@ -4,11 +4,11 @@ import org.springframework.data.domain.PageRequest;
 import ru.practicum.comments.dto.CommentDto;
 import ru.practicum.comments.dto.NewCommentDto;
 
-
 import java.util.List;
 
 
 public interface CommentService {
+
     CommentDto saveComment(Long userId, Long eventId, NewCommentDto newCommentDto);
 
 
@@ -21,13 +21,14 @@ public interface CommentService {
     CommentDto getCommentById(Long userId, Long commentId);
 
 
-    List<CommentDto> getCommentsUser(Long userId, PageRequest page);
+    List<CommentDto> getCommentsByUserId(Long userId, PageRequest page);
 
 
-    List<CommentDto> getCommentsEvent(Long userId, Long eventId, PageRequest page);
+    List<CommentDto> getCommentsForEvent(Long userId, Long eventId, PageRequest page);
 
 
     void deleteComment(Long userId, Long commentId);
 
     void deleteCommentByAdmin(Long commentId);
+
 }

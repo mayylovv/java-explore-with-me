@@ -13,23 +13,20 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/comments")
-public class CommentAdminController {
-
+public class CommentControllerAdmin {
 
     private final CommentService commentService;
 
     @PatchMapping("/{commentId}")
     public CommentDto updateCommentByAdmin(@PathVariable Long commentId, @RequestBody @Valid NewCommentDto newCommentDto) {
-        log.info("PATCH '/admin/comments'. Запрос на обновление комментария {} ", commentId);
-        CommentDto response = commentService.updateCommentByAdmin(commentId, newCommentDto);
-        log.info("PATCH '/admin/comments'. Ответ, комментарий обновлен: {}", response);
-        return response;
+        log.info("Обновление комментария {} с id = {}", newCommentDto, commentId);
+        return commentService.updateCommentByAdmin(commentId, newCommentDto);
     }
 
 
     @DeleteMapping("/{commentId}")
     public void deleteCommentByAdmin(@PathVariable Long commentId) {
-        log.info("DELETE '/admin/comments/{commentId}'. Запрос удаления комментария {}", commentId);
+        log.info("Удаление комментария с id = {}", commentId);
         commentService.deleteCommentByAdmin(commentId);
     }
 

@@ -1,20 +1,22 @@
 package ru.practicum.comments.dto;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@ToString
-@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentDto {
-    private Long id;
-    private String text;
-    private String authorName;
-    private Long eventId;
-    private LocalDateTime created;
+
+    Long id;
+    String text;
+    String authorName;
+    Long eventId;
+    LocalDateTime created;
+
 }
