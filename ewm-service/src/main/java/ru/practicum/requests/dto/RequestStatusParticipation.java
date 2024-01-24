@@ -6,7 +6,7 @@ import ru.practicum.requests.EventRequestStatus;
 import java.util.Set;
 
 @Data
-public class EventRequestStatusUpdateRequest {
+public class RequestStatusParticipation {
     private Set<Long> requestIds;
     private EventRequestStatus status;
 }

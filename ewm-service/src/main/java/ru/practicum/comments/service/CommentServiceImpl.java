@@ -8,7 +8,7 @@ import ru.practicum.comments.dto.CommentDto;
 import ru.practicum.comments.dto.NewCommentDto;
 import ru.practicum.comments.mapper.CommentMapper;
 import ru.practicum.comments.repository.CommentRepository;
-import ru.practicum.handler.NotFoundException;
+import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.comments.model.Comment;
 import ru.practicum.events.model.Event;
 import ru.practicum.users.model.User;

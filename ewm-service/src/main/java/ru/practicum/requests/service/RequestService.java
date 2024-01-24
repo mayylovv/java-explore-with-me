@@ -1,6 +1,6 @@
 package ru.practicum.requests.service;
 
-import ru.practicum.requests.dto.EventRequestStatusUpdateRequest;
+import ru.practicum.requests.dto.RequestStatusParticipation;
 import ru.practicum.requests.dto.EventRequestStatusUpdateResult;
 import ru.practicum.requests.dto.ParticipationRequestDto;
 
@@ -11,7 +11,7 @@ public interface RequestService {
     List<ParticipationRequestDto> getParticipationRequest(Long userId, Long eventId);
 
     EventRequestStatusUpdateResult updateEventRequestStatus(Long userId, Long eventId,
-                                                            EventRequestStatusUpdateRequest dtoRequest);
+                                                            RequestStatusParticipation dtoRequest);
 
     List<ParticipationRequestDto> getParticipationRequestByUserId(Long userId);
 

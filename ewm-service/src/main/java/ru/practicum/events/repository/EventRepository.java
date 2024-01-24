@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import ru.practicum.events.EventState;
+import ru.practicum.events.enums.EventState;
 import ru.practicum.util.PaginationSetup;
 import ru.practicum.events.model.Event;
 
@@ -22,8 +22,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     Optional<Event> findByIdAndInitiatorId(Long eventId, Long initiatorId);
 
-    @Query(
-            "select e " +
+    @Query("select e " +
                     "from Event AS e " +
                     "JOIN FETCH e.initiator " +
                     "JOIN FETCH e.category " +
@@ -39,8 +38,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                                                     List<Long> categories, Boolean paid,
                                                     String text, PaginationSetup pageable);
 
-    @Query(
-            "SELECT DISTINCT e " +
+    @Query("SELECT DISTINCT e " +
                     "FROM Event AS e " +
                     "JOIN FETCH e.initiator " +
                     "JOIN FETCH e.category " +

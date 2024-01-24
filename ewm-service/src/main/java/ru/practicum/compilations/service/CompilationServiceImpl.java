@@ -14,12 +14,11 @@ import ru.practicum.compilations.dto.NewCompilationDto;
 import ru.practicum.compilations.model.Compilation;
 import ru.practicum.compilations.repository.CompilationRepository;
 import ru.practicum.events.repository.EventRepository;
-import ru.practicum.handler.NotFoundException;
+import ru.practicum.exceptions.NotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.practicum.util.Messages.*;
 import static ru.practicum.compilations.mapper.CompilationMapper.mapToNewCompilation;
 import static ru.practicum.compilations.mapper.CompilationMapper.mapToCompilationDto;
 

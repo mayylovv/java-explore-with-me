@@ -1,19 +1,18 @@
 package ru.practicum.events.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotNull;
 
-@ToString
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Location {
+
     @NotNull
-    private Float lat;
+    Float lat;
+
     @NotNull
-    private Float lon;
+    Float lon;
 }

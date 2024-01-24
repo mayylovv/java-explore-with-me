@@ -1,4 +1,4 @@
-package ru.practicum.events;
+package ru.practicum.events.enums;
 
 public enum StateActionEvent {
     PUBLISH_EVENT,

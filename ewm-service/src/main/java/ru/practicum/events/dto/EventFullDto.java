@@ -3,8 +3,9 @@ package ru.practicum.events.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.categories.dto.CategoryDto;
-import ru.practicum.events.EventState;
+import ru.practicum.events.enums.EventState;
 import ru.practicum.events.model.Location;
 import ru.practicum.users.dto.UserShortDto;
 
@@ -12,39 +13,43 @@ import java.time.LocalDateTime;
 
 import static ru.practicum.util.Constants.PATTERN_DATE;
 
-@Setter
-@Getter
-@ToString
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventFullDto {
-    private Long id;
-    private String title;
-    private String annotation;
+
+    Long id;
+    String title;
+    String annotation;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = PATTERN_DATE)
-    private LocalDateTime eventDate;
-    private Location location;
-    private boolean paid;
-    private int participantLimit;
-    private long confirmedRequests;
-    private long views;
-    private EventState state;
+    LocalDateTime eventDate;
+    Location location;
+    boolean paid;
+    int participantLimit;
+    long confirmedRequests;
+    long views;
+    EventState state;
+
     @JsonUnwrapped
     public AdditionalEventInformation eventInformation;
 
-    @Getter
-    @Setter
+    @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    @ToString
-    protected static class AdditionalEventInformation {
-        private String description;
-        private CategoryDto category;
-        private boolean requestModeration;
-        private UserShortDto initiator;
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    public static class AdditionalEventInformation {
+
+        String description;
+        CategoryDto category;
+        boolean requestModeration;
+        UserShortDto initiator;
+
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = PATTERN_DATE)
-        private LocalDateTime publishedOn;
+        LocalDateTime publishedOn;
+
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = PATTERN_DATE)
-        private LocalDateTime createdOn;
+        LocalDateTime createdOn;
     }
 }
