@@ -6,7 +6,7 @@ import ru.practicum.events.model.Event;
 import ru.practicum.events.model.Location;
 import ru.practicum.users.model.User;
 
-import static ru.practicum.categories.dto.CategoryMapper.toCategoryDto;
+import static ru.practicum.categories.mapper.CategoryMapper.toCategoryDto;
 import static ru.practicum.users.dto.UserMapper.toUserShortDto;
 
 @UtilityClass
