@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.users.dto.NewUserDto;
 import ru.practicum.users.dto.UserDto;
-import ru.practicum.users.dto.UserMapper;
+import ru.practicum.users.mapper.UserMapper;
 import ru.practicum.users.model.User;
 import ru.practicum.users.repository.UserRepository;
 import ru.practicum.util.PaginationSetup;
@@ -16,12 +16,12 @@ import ru.practicum.util.PaginationSetup;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.practicum.users.dto.UserMapper.toUser;
-import static ru.practicum.users.dto.UserMapper.toUserDto;
+import static ru.practicum.users.mapper.UserMapper.toUser;
+import static ru.practicum.users.mapper.UserMapper.toUserDto;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 

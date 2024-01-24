@@ -10,7 +10,7 @@ import ru.practicum.events.model.Location;
 import ru.practicum.users.model.User;
 
 import static ru.practicum.categories.mapper.CategoryMapper.toCategoryDto;
-import static ru.practicum.users.dto.UserMapper.toUserShortDto;
+import static ru.practicum.users.mapper.UserMapper.toUserShortDto;
 
 @UtilityClass
 public class EventMapper {

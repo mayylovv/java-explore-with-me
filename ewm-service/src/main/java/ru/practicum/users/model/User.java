@@ -1,28 +1,26 @@
 package ru.practicum.users.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
+@Data
 @Entity
-@Table(name = "users", uniqueConstraints = {@UniqueConstraint(name = "user_email_unique", columnNames = "email")})
-@ToString
-@Getter
-@Setter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @DynamicUpdate
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(name = "user_email_unique", columnNames = "email")})
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
-    private Long id;
+    Long id;
+
     @Column(name = "email", nullable = false, length = 254)
     @EqualsAndHashCode.Include
-    private String email;
+    String email;
+
     @Column(name = "name", nullable = false, length = 250)
-    private String name;
+    String name;
 }

@@ -1,6 +1,9 @@
-package ru.practicum.users.dto;
+package ru.practicum.users.mapper;
 
 import lombok.experimental.UtilityClass;
+import ru.practicum.users.dto.NewUserDto;
+import ru.practicum.users.dto.UserDto;
+import ru.practicum.users.dto.UserShortDto;
 import ru.practicum.users.model.User;
 
 @UtilityClass
@@ -13,18 +16,20 @@ public class UserMapper {
         return user;
     }
 
+    public static UserShortDto toUserShortDto(User user) {
+        UserShortDto userShortDto = new UserShortDto(
+                user.getId(),
+                user.getName()
+        );
+        return userShortDto;
+    }
+
     public static UserDto toUserDto(User user) {
-        return new UserDto(
+        UserDto userDto = new UserDto(
                 user.getEmail(),
                 user.getId(),
                 user.getName()
         );
-    }
-
-    public static UserShortDto toUserShortDto(User user) {
-        return new UserShortDto(
-                user.getId(),
-                user.getName()
-        );
+        return userDto;
     }
 }
