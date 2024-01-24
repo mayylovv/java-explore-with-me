@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.events.dto.*;
 import ru.practicum.events.service.EventService;
 import ru.practicum.requests.dto.RequestStatusParticipation;
-import ru.practicum.requests.dto.EventRequestStatusUpdateResult;
-import ru.practicum.requests.dto.ParticipationRequestDto;
+import ru.practicum.requests.dto.RequestStatusConfirm;
+import ru.practicum.requests.dto.RequestDto;
 import ru.practicum.requests.service.RequestService;
 
 import javax.validation.Valid;
@@ -62,17 +62,17 @@ public class EventControllerPrivate {
 
     @GetMapping("/{eventId}/requests")
     @ResponseStatus(value = HttpStatus.OK)
-    public Collection<ParticipationRequestDto> getRequestByIdEvent(@PathVariable(value = "userId") Long userId,
-                                                                   @PathVariable(value = "eventId") Long eventId) {
+    public Collection<RequestDto> getRequestByIdEvent(@PathVariable(value = "userId") Long userId,
+                                                      @PathVariable(value = "eventId") Long eventId) {
         log.info("Получение запроса на участие в событии eventId = {} пользователя с userId = {} and ", eventId, userId);
         return requestService.getParticipationRequest(userId,eventId);
     }
 
     @PatchMapping("/{eventId}/requests")
     @ResponseStatus(value = HttpStatus.OK)
-    public EventRequestStatusUpdateResult updateEventRequestStatus(@PathVariable(value = "userId") Long userId,
-                                                                   @PathVariable(value = "eventId") Long eventId,
-                                                                   @RequestBody RequestStatusParticipation updateRequest) {
+    public RequestStatusConfirm updateEventRequestStatus(@PathVariable(value = "userId") Long userId,
+                                                         @PathVariable(value = "eventId") Long eventId,
+                                                         @RequestBody RequestStatusParticipation updateRequest) {
         log.info("Обновление статуса запроса: userId = {}, eventId = {}", userId, eventId);
         return requestService.updateEventRequestStatus(userId,eventId, updateRequest);
     }

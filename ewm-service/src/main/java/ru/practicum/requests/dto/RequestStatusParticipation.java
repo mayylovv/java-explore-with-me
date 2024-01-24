@@ -1,12 +1,17 @@
 package ru.practicum.requests.dto;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.requests.EventRequestStatus;
 
 import java.util.Set;
 
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class RequestStatusParticipation {
-    private Set<Long> requestIds;
-    private EventRequestStatus status;
+
+    Set<Long> requestIds;
+    EventRequestStatus status;
+
 }

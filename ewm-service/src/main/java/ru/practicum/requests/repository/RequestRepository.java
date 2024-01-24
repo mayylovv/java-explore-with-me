@@ -3,7 +3,7 @@ package ru.practicum.requests.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.practicum.requests.EventRequestStatus;
-import ru.practicum.requests.model.ParticipationRequest;
+import ru.practicum.requests.model.Request;
 import ru.practicum.requests.model.RequestShort;
 
 
@@ -11,17 +11,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-public interface RequestRepository extends JpaRepository<ParticipationRequest, Long> {
+public interface RequestRepository extends JpaRepository<Request, Long> {
 
-    List<ParticipationRequest> findAllByRequesterId(Long requesterId);
+    List<Request> findAllByRequesterId(Long requesterId);
 
     Boolean existsByRequesterIdAndEventId(Long userId, Long eventId);
 
-    Optional<ParticipationRequest> findByIdAndRequesterId(Long requestId, Long requesterId);
+    Optional<Request> findByIdAndRequesterId(Long requestId, Long requesterId);
 
-    Optional<ParticipationRequest> findAllByEventId(Long eventId);
+    Optional<Request> findAllByEventId(Long eventId);
 
-    List<ParticipationRequest> findAllByEventIdAndIdIn(Long eventId, Set<Long> requestIds);
+    List<Request> findAllByEventIdAndIdIn(Long eventId, Set<Long> requestIds);
 
     @Query(value = "SELECT COUNT(*) " +
             "FROM requests " +
@@ -30,7 +30,7 @@ public interface RequestRepository extends JpaRepository<ParticipationRequest, L
 
     @Query(
             "select new ru.practicum.requests.model.RequestShort(pr.event.id, count(pr.id)) " +
-                    "from ParticipationRequest as pr " +
+                    "from Request as pr " +
                     "where pr.event.id in :eventIds " +
                     "and pr.status = :eventRequestStatus " +
                     "group by pr.event.id"

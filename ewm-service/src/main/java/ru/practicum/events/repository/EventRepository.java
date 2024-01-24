@@ -52,7 +52,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                     "   OR UPPER(e.title) LIKE UPPER(CONCAT('%', :text, '%')) " +
                     ") " +
                     "AND ( " +
-                    "   COALESCE((SELECT COUNT(r.id) FROM ParticipationRequest r WHERE r.event = e AND r.status = 'CONFIRMED'), 0) < e.participantLimit " +
+                    "   COALESCE((SELECT COUNT(r.id) FROM Request r WHERE r.event = e AND r.status = 'CONFIRMED'), 0) < e.participantLimit " +
                     "   OR e.participantLimit = 0 " +
                     ") " +
                     "ORDER BY e.createdOn DESC"

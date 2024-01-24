@@ -5,14 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.requests.dto.RequestStatusParticipation;
-import ru.practicum.requests.dto.EventRequestStatusUpdateResult;
+import ru.practicum.requests.dto.RequestStatusConfirm;
 import ru.practicum.events.model.Event;
 import ru.practicum.events.repository.EventRepository;
 import ru.practicum.exceptions.ValidateException;
 import ru.practicum.exceptions.NotFoundException;
-import ru.practicum.requests.dto.ParticipationRequestDto;
-import ru.practicum.requests.dto.ParticipationRequestMapper;
-import ru.practicum.requests.model.ParticipationRequest;
+import ru.practicum.requests.dto.RequestDto;
+import ru.practicum.requests.mapper.RequestMapper;
+import ru.practicum.requests.model.Request;
 import ru.practicum.requests.repository.RequestRepository;
 import ru.practicum.users.model.User;
 import ru.practicum.users.repository.UserRepository;
@@ -23,11 +23,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static ru.practicum.util.Messages.*;
 import static ru.practicum.events.enums.EventState.PUBLISHED;
 import static ru.practicum.requests.EventRequestStatus.*;
-import static ru.practicum.requests.dto.ParticipationRequestMapper.mapToNewParticipationRequest;
-import static ru.practicum.requests.dto.ParticipationRequestMapper.mapToParticipationRequestDto;
+import static ru.practicum.requests.mapper.RequestMapper.mapToNewParticipationRequest;
+import static ru.practicum.requests.mapper.RequestMapper.mapToParticipationRequestDto;
 
 @Service
 @RequiredArgsConstructor
@@ -39,58 +38,14 @@ public class RequestServiceImpl implements RequestService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
 
-    @Override
-    public List<ParticipationRequestDto> getParticipationRequest(Long userId, Long eventId) {
-        log.info(GET_MODELS.getMessage());
-        if (eventRepository.findByIdAndInitiatorId(eventId, userId).isPresent()) {
-            return requestRepository.findAllByEventId(eventId).stream()
-                    .map(ParticipationRequestMapper::mapToParticipationRequestDto)
-                    .collect(Collectors.toList());
-        }
-        return Collections.emptyList();
-    }
-
     @Transactional
     @Override
-    public EventRequestStatusUpdateResult updateEventRequestStatus(Long userId, Long eventId,
-                                                                   RequestStatusParticipation dtoRequest) {
-        Event event = eventRepository.findByIdAndInitiatorId(eventId, userId)
-                .orElseThrow(() -> new NotFoundException("Не найдено событие с id = " + eventId));
-        if (event.getParticipantLimit() == 0 || !event.getRequestModeration()) {
-            throw new ValidateException("Подтверждение не требуется");
-        }
-        List<ParticipationRequest> requests = requestRepository.findAllByEventIdAndIdIn(eventId,
-                dtoRequest.getRequestIds());
-        validRequestStatus(requests);
-        log.info(UPDATE_STATUS.getMessage());
-        switch (dtoRequest.getStatus()) {
-            case CONFIRMED:
-                return saveConfirmedStatus(requests, event);
-            case REJECTED:
-                return saveRejectedStatus(requests, event);
-            default:
-                throw new ValidateException("Неизвестный state: " + dtoRequest.getStatus());
-        }
-    }
-
-    @Override
-    public List<ParticipationRequestDto> getParticipationRequestByUserId(Long userId) {
-        userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Не найден пользователь с id = " + userId));
-        log.info(GET_MODELS.getMessage());
-        return requestRepository.findAllByRequesterId(userId).stream()
-                .map(ParticipationRequestMapper::mapToParticipationRequestDto)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional
-    @Override
-    public ParticipationRequestDto saveParticipationRequest(Long userId, Long eventId) {
+    public RequestDto createRequest(Long userId, Long eventId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Не найден пользователь с id = " + userId));
+                .orElseThrow(() -> new NotFoundException("Пользователь с id = " + userId + " не найден"));
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Не найдено событие с id = " + eventId));
-        log.info(GET_MODEL_BY_ID.getMessage(), event);
+                .orElseThrow(() -> new NotFoundException("Событие с id = " + eventId + " не найдено"));
+        log.info("Получение по id = {}", event);
         if (userId.equals(event.getInitiator().getId())) {
             throw new ValidateException("Инициатор не может добавить заявку");
         }
@@ -101,81 +56,118 @@ public class RequestServiceImpl implements RequestService {
         if (requestRepository.existsByRequesterIdAndEventId(userId, eventId)) {
             throw new ValidateException("Вы не можете добавить повторный запрос");
         }
-        ParticipationRequest newRequest = requestRepository.save(mapToNewParticipationRequest(event, user));
-        log.info(SAVE_MODEL.getMessage(), newRequest);
-
+        Request newRequest = requestRepository.save(mapToNewParticipationRequest(event, user));
+        log.info("Сохранение {}", newRequest);
         return mapToParticipationRequestDto(newRequest);
+    }
+
+    @Override
+    public List<RequestDto> getParticipationRequest(Long userId, Long eventId) {
+        log.info("Получение");
+        if (eventRepository.findByIdAndInitiatorId(eventId, userId).isPresent()) {
+            return requestRepository.findAllByEventId(eventId).stream()
+                    .map(RequestMapper::mapToParticipationRequestDto)
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
     }
 
     @Transactional
     @Override
-    public ParticipationRequestDto updateStatusParticipationRequest(Long userId, Long requestId) {
-        ParticipationRequest request = requestRepository.findByIdAndRequesterId(requestId, userId)
-                .orElseThrow(() -> new NotFoundException("Не найден запрос с id = " + requestId));
-        request.setStatus(CANCELED);
-        log.info(UPDATE_MODEL.getMessage(), request);
-        return mapToParticipationRequestDto(requestRepository.save(request));
-    }
-
-    private void validParticipantLimit(Event event) {
-        int confirmedRequests = requestRepository.getConfirmedRequestsByEventId(event.getId());
-        if (event.getParticipantLimit() > 0 && confirmedRequests == (event.getParticipantLimit())) {
-            throw new ValidateException("В мероприятии исчерпан лимит заявок на участие");
+    public RequestStatusConfirm updateEventRequestStatus(Long userId, Long eventId,
+                                                         RequestStatusParticipation requestStatusParticipation) {
+        Event event = eventRepository.findByIdAndInitiatorId(eventId, userId)
+                .orElseThrow(() -> new NotFoundException("Событие с id = " + eventId + " не найдено"));
+        if (event.getParticipantLimit() == 0 || !event.getRequestModeration()) {
+            throw new ValidateException("Подтверждение не требуется");
+        }
+        List<Request> requests = requestRepository.findAllByEventIdAndIdIn(eventId,
+                requestStatusParticipation.getRequestIds());
+        validRequestStatus(requests);
+        log.info("Обновление");
+        switch (requestStatusParticipation.getStatus()) {
+            case CONFIRMED:
+                return saveConfirmedStatus(requests, event);
+            case REJECTED:
+                return saveRejectedStatus(requests, event);
+            default:
+                throw new ValidateException("Неизвестный state: " + requestStatusParticipation.getStatus());
         }
     }
 
-    private void validRequestStatus(List<ParticipationRequest> requests) {
+    @Override
+    public List<RequestDto> getRequestByUserId(Long userId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователь с id = " + userId + " не найден"));
+        log.info("Получение");
+        return requestRepository.findAllByRequesterId(userId).stream()
+                .map(RequestMapper::mapToParticipationRequestDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public RequestDto updateStatusParticipationRequest(Long userId, Long requestId) {
+        Request request = requestRepository.findByIdAndRequesterId(requestId, userId)
+                .orElseThrow(() -> new NotFoundException("Запрос с id = " + requestId + " не найден"));
+        request.setStatus(CANCELED);
+        log.info("Обновление {}", request);
+        return mapToParticipationRequestDto(requestRepository.save(request));
+    }
+
+    private RequestStatusConfirm saveRejectedStatus(List<Request> requests, Event event) {
+        requests.forEach(request -> request.setStatus(REJECTED));
+        requestRepository.saveAll(requests);
+        List<RequestDto> rejectedRequests = requests
+                .stream()
+                .map(RequestMapper::mapToParticipationRequestDto)
+                .collect(Collectors.toList());
+        return new RequestStatusConfirm(List.of(), rejectedRequests);
+    }
+
+    private void validRequestStatus(List<Request> requests) {
         boolean isStatusPending = requests.stream()
                 .anyMatch(request -> !request.getStatus().equals(PENDING));
-
         if (isStatusPending) {
             throw new ValidateException("Можно изменить только для запросов в статусе PENDING");
         }
     }
 
-    private EventRequestStatusUpdateResult saveConfirmedStatus(List<ParticipationRequest> requests, Event event) {
-        validParticipantLimit(event);
+    private void validParticipantLimit(Event event) {
+        int confirmedRequests = requestRepository.getConfirmedRequestsByEventId(event.getId());
+        if (event.getParticipantLimit() > 0 && confirmedRequests == (event.getParticipantLimit())) {
+            throw new ValidateException("Исчерпан лимит заявок на участие");
+        }
+    }
 
+    private RequestStatusConfirm saveConfirmedStatus(List<Request> requests, Event event) {
+        validParticipantLimit(event);
         int limitUpdate = event.getParticipantLimit() - requestRepository.getConfirmedRequestsByEventId(event.getId());
         if (requests.size() <= limitUpdate) {
             requests.forEach(request -> request.setStatus(CONFIRMED));
             requestRepository.saveAll(requests);
-
-            return new EventRequestStatusUpdateResult(requests
+            return new RequestStatusConfirm(requests
                     .stream()
-                    .map(ParticipationRequestMapper::mapToParticipationRequestDto)
+                    .map(RequestMapper::mapToParticipationRequestDto)
                     .collect(Collectors.toList()), List.of());
         }
-        List<ParticipationRequest> confirmedRequests = requests.stream()
+        List<Request> confirmedRequests = requests.stream()
                 .limit(limitUpdate)
                 .collect(Collectors.toList());
-
-        List<ParticipationRequest> rejectedRequests = requests.stream()
+        List<Request> rejectedRequests = requests.stream()
                 .filter(element -> !confirmedRequests.contains(element))
                 .peek(request -> request.setStatus(REJECTED))
                 .collect(Collectors.toList());
-
         confirmedRequests.forEach(request -> request.setStatus(CONFIRMED));
-
         requestRepository.saveAll(Stream.of(confirmedRequests, rejectedRequests)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList()));
-        return new EventRequestStatusUpdateResult(confirmedRequests
+        return new RequestStatusConfirm(confirmedRequests
                 .stream()
-                .map(ParticipationRequestMapper::mapToParticipationRequestDto)
+                .map(RequestMapper::mapToParticipationRequestDto)
                 .collect(Collectors.toList()),
                 rejectedRequests.stream()
-                        .map(ParticipationRequestMapper::mapToParticipationRequestDto)
+                        .map(RequestMapper::mapToParticipationRequestDto)
                         .collect(Collectors.toList()));
-    }
-
-    private EventRequestStatusUpdateResult saveRejectedStatus(List<ParticipationRequest> requests, Event event) {
-        requests.forEach(request -> request.setStatus(REJECTED));
-        requestRepository.saveAll(requests);
-        List<ParticipationRequestDto> rejectedRequests = requests
-                .stream()
-                .map(ParticipationRequestMapper::mapToParticipationRequestDto)
-                .collect(Collectors.toList());
-        return new EventRequestStatusUpdateResult(List.of(), rejectedRequests);
     }
 }
