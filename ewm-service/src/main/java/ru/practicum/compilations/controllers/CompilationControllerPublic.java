@@ -11,30 +11,28 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.Collection;
 
+@Slf4j
+@Validated
 @RestController
 @RequestMapping("/compilations")
 @RequiredArgsConstructor
-@Slf4j
-@Validated
-public class PublicCompilationController {
+public class CompilationControllerPublic {
 
     private final CompilationService serviceCompilation;
+
+    @GetMapping("/{compId}")
+    public CompilationDto getCompilation(@PathVariable Long compId) {
+        log.info("Получение компиляций с id {}", compId);
+        return serviceCompilation.getCompilation(compId);
+    }
 
     @GetMapping
     public Collection<CompilationDto> getCompilations(@RequestParam(required = false) Boolean pinned,
                                                       @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
                                                       @RequestParam(defaultValue = "10") @Positive Integer size) {
-        log.info("GET '/compilations'. Запрос на получение всех подборок событий");
-        Collection<CompilationDto> response = serviceCompilation.getAllCompilations(pinned, from, size);
-        log.info("GET '/compilations'. Ответ, все события {}", response);
-        return response;
+        log.info("Получение компиляций с параметрами: pinned {} from {} size {}", pinned, from, size);
+        return serviceCompilation.getAllCompilations(pinned, from, size);
     }
 
-    @GetMapping("/{compId}")
-    public CompilationDto getCompilation(@PathVariable Long compId) {
-        log.info("GET '/compilations/{compId}'. Запрос на получение подборки с id {} ", compId);
-        CompilationDto response = serviceCompilation.getCompilation(compId);
-        log.info("GET '/compilations/{compId}'. Ответ, подборка с id {} и телом {} ", compId, response);
-        return response;
-    }
+
 }

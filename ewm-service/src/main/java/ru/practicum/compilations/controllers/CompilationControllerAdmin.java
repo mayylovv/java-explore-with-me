@@ -11,21 +11,19 @@ import ru.practicum.compilations.service.CompilationService;
 
 import javax.validation.Valid;
 
+@Slf4j
 @RestController
 @RequestMapping("/admin/compilations")
 @RequiredArgsConstructor
-@Slf4j
-public class AdminCompilationController {
+public class CompilationControllerAdmin {
 
     private final CompilationService compilationService;
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public CompilationDto saveCompilation(@Valid @RequestBody NewCompilationDto compilationDto) {
-        log.info("GET '/admin/compilations'. Запрос на добавление новой подборки {} ", compilationDto);
-        CompilationDto response = compilationService.saveCompilation(compilationDto);
-        log.info("GET '/admin/compilations'. Ответ, новая подборка успешно добавлена {} ", response);
-        return response;
+    public CompilationDto createCompilation(@Valid @RequestBody NewCompilationDto newCompilationDto) {
+        log.info("Обновление запроса на компиляцию {}", newCompilationDto);
+        return compilationService.createCompilation(newCompilationDto);
     }
 
     @PatchMapping("/{compId}")
@@ -40,7 +38,7 @@ public class AdminCompilationController {
     @DeleteMapping("/{compId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable(value = "compId") Long compId) {
-        log.info("DELETE '/admin/compilations/{compId}'. Запрос на удаление подборки с id {} ", compId);
+        log.info("Удаление компиляции по id {}", compId);
         compilationService.deleteCompilation(compId);
     }
 }
