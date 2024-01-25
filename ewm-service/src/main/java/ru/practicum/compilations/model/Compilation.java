@@ -1,8 +1,8 @@
 package ru.practicum.compilations.model;
 
 import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.DynamicUpdate;
 import ru.practicum.events.model.Event;
 
 import javax.persistence.*;

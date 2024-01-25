@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 import static ru.practicum.util.Constants.PATTERN_DATE;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventShortDto {
 
@@ -25,7 +25,6 @@ public class EventShortDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = PATTERN_DATE)
     LocalDateTime eventDate;
-
     Long id;
     UserShortDto initiator;
     Boolean paid;

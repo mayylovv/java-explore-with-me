@@ -13,4 +13,5 @@ public class RequestStatusParticipation {
 
     Set<Long> requestIds;
     EventRequestStatus status;
+
 }

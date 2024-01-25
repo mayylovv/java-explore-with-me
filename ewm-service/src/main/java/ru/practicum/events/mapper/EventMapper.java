@@ -4,7 +4,6 @@ import lombok.experimental.UtilityClass;
 import ru.practicum.categories.model.Category;
 import ru.practicum.events.dto.EventFullDto;
 import ru.practicum.events.dto.EventShortDto;
-import ru.practicum.events.dto.AdditionalInformation;
 import ru.practicum.events.dto.NewEventDto;
 import ru.practicum.events.model.Event;
 import ru.practicum.events.model.Location;
@@ -20,7 +19,6 @@ public class EventMapper {
         EventShortDto shortDto = new EventShortDto();
         shortDto.setAnnotation(event.getAnnotation());
         shortDto.setCategory(toCategoryDto(event.getCategory()));
-        shortDto.setConfirmedRequests(event.getConfirmedRequests());
         shortDto.setEventDate(event.getEventDate());
         shortDto.setId(event.getId());
         shortDto.setInitiator(toUserShortDto(event.getInitiator()));
@@ -48,7 +46,6 @@ public class EventMapper {
     public static EventFullDto mapToEventFullDto(Event event) {
         EventFullDto eventFullDto = new EventFullDto();
         eventFullDto.setAnnotation(event.getAnnotation());
-        eventFullDto.setConfirmedRequests(event.getConfirmedRequests());
         eventFullDto.setEventDate(event.getEventDate());
         eventFullDto.setId(event.getId());
         Location location = new Location(event.getLat(), event.getLon());
@@ -57,7 +54,7 @@ public class EventMapper {
         eventFullDto.setParticipantLimit(event.getParticipantLimit());
         eventFullDto.setTitle(event.getTitle());
         eventFullDto.setState(event.getState());
-        AdditionalInformation eventInformation = new AdditionalInformation();
+        EventFullDto.AdditionalEventInformation eventInformation = new EventFullDto.AdditionalEventInformation();
         eventInformation.setDescription(event.getDescription());
         eventInformation.setCategory(toCategoryDto(event.getCategory()));
         eventInformation.setCreatedOn(event.getCreatedOn());
@@ -69,4 +66,5 @@ public class EventMapper {
         eventFullDto.setEventInformation(eventInformation);
         return eventFullDto;
     }
+
 }

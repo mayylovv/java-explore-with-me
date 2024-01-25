@@ -22,10 +22,12 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleNotValidException(final Exception exception) {
         log.error("Код ошибки: {}, {}", HttpStatus.BAD_REQUEST, exception.getMessage());
-        return Map.of("status", "BAD_REQUEST",
-                "reason", "Incorrectly made request.",
+        return Map.of(
+                "status", "BAD_REQUEST",
+                "reason", "Некорректный запрос",
                 "message", exception.getMessage(),
-                "timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern(PATTERN_DATE)));
+                "timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern(PATTERN_DATE))
+        );
     }
 
     @ExceptionHandler
@@ -34,7 +36,7 @@ public class ErrorHandler {
         log.error("Код ошибки: {}, {}", HttpStatus.BAD_REQUEST, exception.getMessage());
         return Map.of(
                 "status", "BAD_REQUEST",
-                "reason", "For the requested operation the conditions are not met.",
+                "reason", "Для запрошенной операции условия не выполнены",
                 "message", exception.getMessage(),
                 "timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern(PATTERN_DATE))
         );
@@ -44,10 +46,12 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public Map<String, String> handleConstraintViolationException(final RuntimeException exception) {
         log.error("Код ошибки: {}, {}", HttpStatus.CONFLICT, exception.getMessage());
-        return Map.of("status", "CONFLICT",
-                "reason", "Integrity constraint has been violated.",
+        return Map.of(
+                "status", "CONFLICT",
+                "reason", "Нарушение целостности",
                 "message", exception.getMessage(),
-                "timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern(PATTERN_DATE)));
+                "timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern(PATTERN_DATE))
+        );
     }
 
     @ExceptionHandler
@@ -61,9 +65,11 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleNotFoundException(final NotFoundException notFoundException) {
         log.error("Код ошибки: {}, {}", HttpStatus.NOT_FOUND, notFoundException.getMessage());
-        return Map.of("status", "NOT_FOUND",
-                "reason", "The required object was not found.",
+        return Map.of(
+                "status", "NOT_FOUND",
+                "reason", "Нужный объект не найден",
                 "message", notFoundException.getMessage(),
-                "timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern(PATTERN_DATE)));
+                "timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern(PATTERN_DATE))
+        );
     }
 }

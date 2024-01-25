@@ -46,8 +46,7 @@ public class EventControllerPrivate {
 
     @GetMapping("/{eventId}")
     @ResponseStatus(value = HttpStatus.OK)
-    public EventFullDto getEventById(@PathVariable(value = "userId") Long userId,
-                                     @PathVariable(value = "eventId") Long eventId) {
+    public EventFullDto getEventById(@PathVariable(value = "userId") Long userId, @PathVariable(value = "eventId") Long eventId) {
         log.info("Получения события по userId = {} и eventId = {}", userId, eventId);
         return eventService.getEventById(userId, eventId);
     }
