@@ -16,15 +16,16 @@ import javax.validation.Valid;
 public class CommentControllerAdmin {
 
     private final CommentService commentService;
+    static final String COMMENT_PATH = "/{commentId}";
 
-    @PatchMapping("/{commentId}")
+    @PatchMapping(COMMENT_PATH)
     public CommentDto updateCommentByAdmin(@PathVariable Long commentId, @RequestBody @Valid NewCommentDto newCommentDto) {
         log.info("Обновление комментария {} с id = {}", newCommentDto, commentId);
         return commentService.updateCommentByAdmin(commentId, newCommentDto);
     }
 
 
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping(COMMENT_PATH)
     public void deleteCommentByAdmin(@PathVariable Long commentId) {
         log.info("Удаление комментария с id = {}", commentId);
         commentService.deleteCommentByAdmin(commentId);

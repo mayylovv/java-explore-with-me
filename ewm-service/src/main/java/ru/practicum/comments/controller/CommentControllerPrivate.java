@@ -24,6 +24,7 @@ public class CommentControllerPrivate {
 
     private final CommentService commentService;
     private static final Sort sort = Sort.by("created").descending();
+    static final String COMMENT_PATH = "/{commentId}";
 
     @PostMapping
     public CommentDto saveComment(@PathVariable Long userId,
@@ -33,7 +34,7 @@ public class CommentControllerPrivate {
         return commentService.saveComment(userId, eventId, newCommentDto);
     }
 
-    @PatchMapping("/{commentId}")
+    @PatchMapping(COMMENT_PATH)
     public CommentDto updateComment(@PathVariable Long userId,
                                     @PathVariable Long commentId,
                                     @RequestBody NewCommentDto commentDto) {
@@ -41,7 +42,7 @@ public class CommentControllerPrivate {
         return commentService.updateComment(userId, commentId, commentDto);
     }
 
-    @GetMapping("/{commentId}")
+    @GetMapping(COMMENT_PATH)
     public CommentDto getComment(@PathVariable Long userId, @PathVariable Long commentId) {
         log.info("Получение комментария с commentId = {} пользователя c userId = {}", commentId, userId);
         return commentService.getCommentById(userId, commentId);
@@ -66,7 +67,7 @@ public class CommentControllerPrivate {
         return commentService.getCommentsForEvent(userId, eventId, page);
     }
 
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping(COMMENT_PATH)
     public void deleteComment(@PathVariable Long userId, @PathVariable Long commentId) {
         log.info("Удаления комментария с commentId = {} у пользователя с userId =  {}", commentId, userId);
         commentService.deleteComment(userId, commentId);
